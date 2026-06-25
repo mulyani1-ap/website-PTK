@@ -1,0 +1,255 @@
+:root {
+  --primary: #0f4c81;
+  --secondary: #1d9bf0;
+  --dark: #0f172a;
+  --light: #f8fafc;
+}
+
+body {
+  font-family: "Segoe UI", sans-serif;
+  background: #f5f7fb;
+}
+
+.topbar {
+  background: #083358;
+  color: white;
+  padding: 8px 0;
+  font-size: 14px;
+}
+
+.navbar {
+  background: #1d9bf0;
+  color: white;
+  padding: 15px 0;
+}
+
+/* Mengubah warna menu teks default menjadi putih semi-transparan */
+.navbar a,
+.navbar .nav-link {
+  color: rgba(255, 255, 255, 0.75) !important;
+  font-weight: 500;
+  transition: 0.3s ease;
+}
+
+/* Menu saat diarahkan kursor (Hover) menjadi putih terang */
+.navbar a:hover,
+.navbar .nav-link:hover {
+  color: #f7f7f7 !important;
+}
+
+/* Menu khusus untuk halaman aktif (Beranda) */
+.navbar .nav-link.active,
+.navbar a.active {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: #ffffff !important;
+}
+
+/* ====================================================
+   HERO SECTION
+   ==================================================== */
+.hero {
+  background: linear-gradient(135deg, #0f4c81, #1d9bf0);
+  color: white;
+  min-height: 85vh;
+  display: flex;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.12) 2px,
+    transparent 2px
+  );
+  background-size: 40px 40px;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 50%;
+  right: -250px;
+  top: -250px;
+}
+
+.hero .container {
+  position: relative;
+  z-index: 2;
+}
+
+.hero h1 {
+  font-size: 3.5rem;
+  font-weight: 800;
+}
+
+.hero img {
+  max-height: 450px;
+  object-fit: cover;
+}
+
+/* ====================================================
+   COMPONENTS & CARDS
+   ==================================================== */
+.floating-stats {
+  margin-top: -60px;
+  position: relative;
+  z-index: 5;
+}
+
+.mini-stat {
+  background: rgb(253, 251, 251);
+  border-radius: 24px;
+  padding: 30px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.08);
+  transition: 0.3s;
+}
+
+.mini-stat:hover {
+  transform: translateY(-8px);
+}
+
+.section-title {
+  font-weight: 800;
+  font-size: 2.5rem;
+}
+
+.section-subtitle {
+  color: #64748b;
+}
+
+.quick-card {
+  background: rgb(250, 248, 248);
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.quick-card:hover {
+  transform: translateY(-8px);
+}
+
+.quick-icon {
+  font-size: 3rem;
+}
+
+.quick-card h5 {
+  margin-top: 15px;
+  font-weight: 700;
+}
+
+.quick-card p {
+  color: #64748b;
+  font-size: 14px;
+}
+
+/* Jarak tambahan antar section biar tidak mepet */
+.sambutan-section,
+.sambutan-modern {
+  background: white;
+  border-radius: 30px;
+  padding: 50px;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+  margin-top: 40px;
+  margin-bottom: 40px;
+}
+
+.service-card {
+  background: white;
+  border-radius: 20px;
+  padding: 30px;
+  text-align: center;
+  height: 100%;
+  transition: 0.3s;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.06);
+}
+
+.service-card:hover {
+  transform: translateY(-8px);
+}
+
+/* ====================================================
+   BERITA & PENGUMUMAN
+   ==================================================== */
+.news-card {
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: 0.3s;
+  margin-bottom: 30px;
+}
+
+.news-card img {
+  height: 220px;
+  width: 100%;
+  object-fit: cover;
+  transition: 0.4s;
+}
+
+.news-card:hover img {
+  transform: scale(1.05);
+}
+
+.news-card:hover {
+  transform: translateY(-6px);
+}
+
+.timeline-item {
+  background: white;
+  border-left: 5px solid #1d9bf0;
+  padding: 20px;
+  margin-bottom: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+}
+
+.kepala-img {
+  width: 220px;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 50%;
+  border: 8px solid #eef6ff;
+}
+
+/* ====================================================
+   FOOTER & RESPONSIVE
+   ==================================================== */
+.footer {
+  background: #0f4c81;
+  color: white;
+  padding: 50px 0;
+  margin-top: 50px;
+}
+
+@media (max-width: 768px) {
+  .hero h1 {
+    font-size: 2.3rem;
+  }
+
+  .floating-stats {
+    margin-top: 30px;
+  }
+
+  .mini-stat {
+    margin-bottom: 15px;
+  }
+
+  .sambutan-section,
+  .sambutan-modern {
+    padding: 25px;
+  }
+}
