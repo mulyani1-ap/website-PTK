@@ -1,10 +1,25 @@
 <?php
 session_start();
 
+// Taruh koneksi databasemu di sini supaya bisa menghitung data
+include "../config/database.php"; 
+
 if(!isset($_SESSION['admin'])){
     header("Location: login.php");
     exit;
 }
+
+// 1. Hitung total data berita
+$query_berita = mysqli_query($conn, "SELECT id FROM berita");
+$total_berita = mysqli_num_rows($query_berita);
+
+// 2. Hitung total data agenda
+$query_agenda = mysqli_query($conn, "SELECT id FROM agenda");
+$total_agenda = mysqli_num_rows($query_agenda);
+
+// 3. Hitung total data pengumuman
+$query_pengumuman = mysqli_query($conn, "SELECT id FROM pengumuman");
+$total_pengumuman = mysqli_num_rows($query_pengumuman);
 ?>
 
 <!DOCTYPE html>
@@ -71,6 +86,8 @@ body{
 
     <a href="dashboard.php">Dashboard</a>
 
+    <a href="ptk.php">Data PTK</a>
+
     <a href="berita.php">Berita</a>
 
     <a href="agenda.php">Agenda</a>
@@ -96,22 +113,22 @@ body{
 
         <div class="col-md-4 mb-4">
             <div class="card-box">
-                <h3>0</h3>
-                <p>Total Berita</p>
+                <h3><?= $total_berita; ?></h3>
+                <p class="text-muted mb-0">Total Berita</p>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card-box">
-                <h3>0</h3>
-                <p>Total Agenda</p>
+                <h3><?= $total_agenda; ?></h3>
+                <p class="text-muted mb-0">Total Agenda</p>
             </div>
         </div>
 
         <div class="col-md-4 mb-4">
             <div class="card-box">
-                <h3>0</h3>
-                <p>Total Pengumuman</p>
+                <h3><?= $total_pengumuman; ?></h3>
+                <p class="text-muted mb-0">Total Pengumuman</p>
             </div>
         </div>
 

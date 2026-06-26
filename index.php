@@ -15,18 +15,40 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" />
     <link rel="stylesheet" href="assets/css/style.css" />
+    
+    <style>
+      /* CSS Tambahan khusus untuk mengatur kerapian logo di topbar */
+      .topbar-logo {
+        height: 40px; /* Atur tinggi logo di topbar */
+        width: auto;
+      }
+    </style>
   </head>
 
   <body>
-    <div class="topbar">
+   <div class="topbar py-2" style="background-color: #002d62; color: white;">
       <div class="container">
-        <div class="d-flex justify-content-between">
-          <span> DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG </span>
-          <span> Bidang Pembinaan Tenaga Kependidikan </span>
+        <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+          
+          <div class="d-flex align-items-center gap-3">
+            
+            <div class="d-flex align-items-center gap-2">
+              <img src="assets/images/logo-bontang.png" alt="Logo Bontang" class="topbar-logo">
+              
+              <img src="assets/images/logo-tutwuri.png" alt="Logo Pendidikan" class="topbar-logo">
+            </div>
+
+            <span class="fw-bold">DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG</span>
+          </div>
+          
+          <div>
+            <span>Bidang Pembinaan Tenaga Kependidikan</span>
+          </div>
+
         </div>
       </div>
     </div>
-
+        
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
       <div class="container">
         <a class="navbar-brand" href="index.php"> PTK BONTANG </a>
@@ -39,7 +61,7 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
             <li class="nav-item"><a class="nav-link active" href="index.php"> Beranda </a></li>
             <li class="nav-item"><a class="nav-link" href="profil.html"> Profil </a></li>
             <li class="nav-item"><a class="nav-link" href="struktur.html"> Struktur </a></li>
-            <li class="nav-item"><a class="nav-link" href="data-gtk.html"> Data GTK </a></li>
+            <li class="nav-item"><a class="nav-link" href="data-gtk.php"> Data GTK </a></li>
             <li class="nav-item"><a class="nav-link" href="kontak.html"> Kontak </a></li>
           </ul>
         </div>
@@ -59,7 +81,6 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
             </div>
           </div>
           <div class="col-lg-6 text-center">
-            <!--- Gambar Dashboard --->  
             <img src="assets/images/prof.jpeg" alt="PTK Bontang" class="img-fluid rounded-4 shadow-lg"/>
           </div>
         </div>
@@ -81,13 +102,15 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
       <div class="sambutan-modern">
         <div class="row align-items-center">
           <div class="col-lg-4 text-center">
-            <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?w=500" class="kepala-img">
+            <img src="https://beritakaltim.co/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-23-at-09.58.29-e1776919254989.jpeg" class="kepala-img">
           </div>
           <div class="col-lg-8">
             <span class="badge bg-primary mb-3">Sambutan Kepala Bidang</span>
             <h2 class="fw-bold mb-3">Selamat Datang di Portal PTK Bontang</h2>
-            <p>Portal ini menjadi pusat informasi, layanan, dan pengembangan tenaga kependidikan di Kota Bontang.</p>
-            <h5 class="mt-4 mb-0">Nama Kepala Bidang</h5>
+            <p>Portal ini menjadi pusat informasi, dan pengembangan tenaga kependidikan di Kota Bontang.
+              Semoga Informasi yang kami beri dapat berguna.
+            </p>
+            <h5 class="mt-4 mb-0">Ishak Karangan, S.Hut., M.Si</h5>
             <small>Kepala Bidang Pembinaan Tenaga Kependidikan</small>
           </div>
         </div>
@@ -189,8 +212,7 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
       </div>
     </section>
 
-    <!--- PENGUMUMAN ---> 
-  <section class="py-5 bg-light">
+    <section class="py-5 bg-light">
       <div class="container">
         <div class="text-center mb-5">
           <h2 class="section-title fw-bold">Pengumuman Terbaru</h2>
@@ -199,7 +221,6 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
         
         <div class="row g-4 justify-content-center">
           <?php
-          // Mengambil 3 pengumuman terbaru dari database
           $query_pengumuman = mysqli_query($conn, "SELECT * FROM pengumuman ORDER BY id DESC LIMIT 3");
           
           if(mysqli_num_rows($query_pengumuman) > 0) {
@@ -293,7 +314,7 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
               <li>Profil</li>
               <li>Struktur Organisasi</li>
               <li>Data GTK</li>
-              </ul>
+            </ul>
           </div>
           <div class="col-lg-4">
             <h5>Kontak</h5>
@@ -304,7 +325,7 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
         <hr>
         <div class="text-center">© 2026 Bidang Pembinaan Tenaga Kependidikan Kota Bontang</div>
       </div>
-    </footer>
+    </footer >
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
   </body>
 </html>
