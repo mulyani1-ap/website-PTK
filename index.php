@@ -3,6 +3,9 @@ include "config/database.php";
 
 // 1. PERBAIKAN: Menambahkan huruf 'i' pada mysqli_query
 $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC LIMIT 3");
+
+// Ambil kata kunci dari search bar (jika ada)
+$keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 ?>
 
 <!doctype html>
@@ -21,6 +24,15 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
       .topbar-logo {
         height: 40px; /* Atur tinggi logo di topbar */
         width: auto;
+      }
+
+      .card-hover-effect {
+        transition: transform 0.2s, box-shadow 0.2s;
+        cursor: pointer;
+      }
+      .card-hover-effect:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1) !important;
       }
     </style>
   </head>
@@ -61,8 +73,8 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
             <li class="nav-item"><a class="nav-link active" href="index.php"> Beranda </a></li>
             <li class="nav-item"><a class="nav-link" href="profil.html"> Profil </a></li>
             <li class="nav-item"><a class="nav-link" href="struktur.html"> Struktur </a></li>
-            <li class="nav-item"><a class="nav-link" href="data-gtk.php"> Data GTK </a></li>
-            <li class="nav-item"><a class="nav-link" href="kontak.html"> Kontak </a></li>
+            <li class="nav-item"><a class="nav-link" href="data_gtk.php"> Data GTK </a></li>
+            <li class="nav-item"><a class="nav-link" href="kontak.php"> Kontak </a></li>
           </ul>
         </div>
       </div>
@@ -117,47 +129,65 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
       </div>
     </section>
 
+    <!--- AKSES CEPAT (HREF SUDAH DIUBAH KE HALAMAN PUBLIK GURU/VISITOR) --->
     <section class="container my-5">
       <div class="text-center mb-5">
         <h2 class="fw-bold text-dark">Akses Cepat</h2>
         <p class="text-muted">Layanan utama Bidang Pembinaan Tenaga Kependidikan</p>
       </div>
 
-      <div class="row g-4 justify-content-center">
+      <div class="row g-4 text-center">
+        
+        <!-- 1. Data GTK -->
         <div class="col-md-6 col-lg-3">
-          <div class="card border-0 shadow-sm text-center p-4 bg-light h-100 position-relative text-dark hover-card">
-            <div class="mb-3 text-primary"><i class="bi bi-person-badge fs-1"></i></div>
-            <h5 class="fw-bold mb-2">Data GTK</h5>
-            <p class="text-muted small mb-0">Data guru, kepala sekolah, dan tenaga kependidikan</p>
-            <a href="data-gtk.html" class="stretched-link"></a>
-          </div>
+          <a href="data-gtk.php" class="text-decoration-none text-dark d-block h-100">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
+              <div class="text-primary mb-3">
+                <i class="bi bi-person-badge fs-1"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Data GTK</h4>
+              <p class="text-muted small mb-0">Data guru, kepala sekolah, dan tenaga kependidikan</p>
+            </div>
+          </a>
         </div>
 
+        <!-- 2. NUPTK (Diubah dari kelola.php menjadi nuptk.php khusus visitor) -->
         <div class="col-md-6 col-lg-3">
-          <div class="card border-0 shadow-sm text-center p-4 bg-light h-100 position-relative text-dark hover-card">
-            <div class="mb-3 text-success"><i class="bi bi-card-heading fs-1"></i></div>
-            <h5 class="fw-bold mb-2">NUPTK</h5>
-            <p class="text-muted small mb-0">Cek status, validasi, dan riwayat NUPTK GTK</p>
-            <a href="kelola.php?fitur=nuptk" class="stretched-link"></a>
-          </div>
+          <a href="nuptk.php" class="text-decoration-none text-dark d-block h-100">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
+              <div class="text-success mb-3">
+                <i class="bi bi-card-text fs-1"></i>
+              </div>
+              <h4 class="fw-bold mb-2">NUPTK</h4>
+              <p class="text-muted small mb-0">Cek status, validasi, dan riwayat NUPTK GTK</p>
+            </div>
+          </a>
         </div>
 
+        <!-- 3. Sertifikasi (Diubah dari kelola.php menjadi sertifikasi.php khusus visitor) -->
         <div class="col-md-6 col-lg-3">
-          <div class="card border-0 shadow-sm text-center p-4 bg-light h-100 position-relative text-dark hover-card">
-            <div class="mb-3 text-warning"><i class="bi bi-mortarboard fs-1"></i></div>
-            <h5 class="fw-bold mb-2">Sertifikasi</h5>
-            <p class="text-muted small mb-0">Informasi tunjangan profesi dan status sertifikasi guru</p>
-            <a href="kelola.php?fitur=sertifikasi" class="stretched-link"></a>
-          </div>
+          <a href="sertifikasi.php" class="text-decoration-none text-dark d-block h-100">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
+              <div class="text-warning mb-3">
+                <i class="bi bi-mortarboard fs-1"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Sertifikasi</h4>
+              <p class="text-muted small mb-0">Informasi tunjangan profesi dan status sertifikasi guru</p>
+            </div>
+          </a>
         </div>
 
+        <!-- 4. Unduhan -->
         <div class="col-md-6 col-lg-3">
-          <div class="card border-0 shadow-sm text-center p-4 bg-light h-100 position-relative text-dark hover-card">
-            <div class="mb-3 text-danger"><i class="bi bi-download fs-1"></i></div>
-            <h5 class="fw-bold mb-2">Unduhan</h5>
-            <p class="text-muted small mb-0">Berkas administrasi dan panduan layanan GTK</p>
-            <a href="kelola.php?fitur=unduhan" class="stretched-link"></a>
-          </div>
+          <a href="unduhan.php" class="text-decoration-none text-dark d-block h-100">
+            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
+              <div class="text-danger mb-3">
+                <i class="bi bi-download fs-1"></i>
+              </div>
+              <h4 class="fw-bold mb-2">Unduhan</h4>
+              <p class="text-muted small mb-0">Berkas administrasi dan panduan layanan GTK</p>
+            </div>
+          </a>
         </div>
       </div>
     </section>
@@ -186,15 +216,42 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
       </div>
     </section>
 
-    <section class="py-5 bg-white">
+    <!-- SECTION BERITA -->
+    <section id="section-berita" class="py-5 bg-white" style="scroll-margin-top: 100px;">
       <div class="container">
-        <div class="text-center mb-5">
+        <div class="text-center mb-4">
           <h2 class="section-title">Berita Terbaru</h2>
         </div>
+
+        <!-- Tambahan Fitur Search Bar Berita -->
+        <div class="row justify-content-center mb-5">
+          <div class="col-md-6">
+            <form action="index.php#section-berita" method="GET" class="d-flex shadow-sm rounded-pill bg-light p-1 border">
+              <input type="text" name="search" class="form-control border-0 px-4 rounded-pill bg-light shadow-none" placeholder="Cari berita..." value="<?= htmlspecialchars($keyword); ?>">
+              <button type="submit" class="btn btn-primary px-4 rounded-pill">
+                <i class="bi bi-search"></i>
+              </button>
+            </form>
+            <?php if (!empty($keyword)) { ?>
+              <div class="text-center mt-2 small text-muted">
+                Menampilkan hasil untuk: <strong class="text-primary">"<?= htmlspecialchars($keyword); ?>"</strong>
+                <a href="index.php#section-berita" class="text-danger ms-2 text-decoration-none"><i class="bi bi-x-circle-fill"></i> Bersihkan</a>
+              </div>
+            <?php } ?>
+          </div>
+        </div>
+
         <div class="row g-4">
           <?php
-          $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' ORDER BY id DESC LIMIT 3");
-          while($row = mysqli_fetch_assoc($berita)):
+          // Query bersyarat berdasarkan keyword pencarian
+          if (!empty($keyword)) {
+              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' AND (judul LIKE '%$keyword%' OR ringkasan LIKE '%$keyword%') ORDER BY id DESC LIMIT 3");
+          } else {
+              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' ORDER BY id DESC LIMIT 3");
+          }
+
+          if(mysqli_num_rows($berita) > 0) {
+              while($row = mysqli_fetch_assoc($berita)):
           ?>
           <div class="col-lg-4">
             <div class="card news-card h-100">
@@ -207,7 +264,15 @@ $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC 
               </div>
             </div>
           </div>
-          <?php endwhile; ?>
+          <?php 
+              endwhile;
+          } else {
+          ?>
+              <div class="col-12 text-center text-muted py-4">
+                  <i class="bi bi-newspaper fs-2 d-block mb-2"></i>
+                  <p class="mb-0">Berita dengan kata kunci tersebut tidak ditemukan.</p>
+              </div>
+          <?php } ?>
         </div>
       </div>
     </section>

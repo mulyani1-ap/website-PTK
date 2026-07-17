@@ -71,8 +71,8 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
             <li class="nav-item"><a class="nav-link" href="index.php">Beranda</a></li>
             <li class="nav-item"><a class="nav-link" href="profil.html">Profil</a></li>
             <li class="nav-item"><a class="nav-link" href="struktur.html">Struktur</a></li>
-            <li class="nav-item"><a class="nav-link active" href="data-gtk.php">Data GTK</a></li>
-            <li class="nav-item"><a class="nav-link" href="kontak.html">Kontak</a></li>
+            <li class="nav-item"><a class="nav-link active" href="data_gtk.php">Data GTK</a></li>
+            <li class="nav-item"><a class="nav-link" href="kontak.php">Kontak</a></li>
           </ul>
         </div>
       </div>
