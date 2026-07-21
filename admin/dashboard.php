@@ -7,7 +7,7 @@ $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 $alert_sukses = "";
 $alert_gagal = "";
 
-// LOGIKA BARU: Ajax Handler untuk menandai pesan telah dibaca tanpa refresh halaman
+// 1. AJAX Handler: Menandai pesan telah dibaca tanpa refresh halaman
 if (isset($_GET['action']) && $_GET['action'] == 'mark_read' && isset($_GET['id'])) {
     header('Content-Type: application/json');
     $id_pesan = intval($_GET['id']);
@@ -20,6 +20,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'mark_read' && isset($_GET['id'
     exit;
 }
 
+// 2. Handler Hapus Pesan Masuk
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_pesan = intval($_GET['id']);
     try {
@@ -34,39 +35,31 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
+// 3. STATISTIK UTAMA: Hitung total data langsung dari tabel ptk & pendukungnya
 $count_gtk = 0;
 $count_berita = 0;
 $count_agenda = 0;
 $count_pesan = 0;
 
-// 1. Hitung total data GTK (menggunakan auto-resolver nama tabel)
-$table_gtk = 'data-gtk';
-foreach (['data-gtk', 'data_gtk', 'datagtk'] as $t) {
-    try {
-        $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM `$t`");
-        if ($q !== false) {
-            $count_gtk = mysqli_fetch_assoc($q)['total'];
-            $table_gtk = $t;
-            break;
-        }
-    } catch (Exception $e) {
-        continue;
-    }
-}
+// Hitung total Guru & Staff dari tabel 'ptk' asli
+try {
+    $q_ptk = mysqli_query($conn, "SELECT COUNT(*) as total FROM `ptk`");
+    if ($q_ptk) $count_gtk = mysqli_fetch_assoc($q_ptk)['total'];
+} catch (Exception $e) {}
 
-// 2. Hitung total berita
+// Hitung total berita
 try {
     $q_berita = mysqli_query($conn, "SELECT COUNT(*) as total FROM berita");
     if ($q_berita) $count_berita = mysqli_fetch_assoc($q_berita)['total'];
 } catch (Exception $e) {}
 
-// 3. Hitung total agenda
+// Hitung total agenda
 try {
     $q_agenda = mysqli_query($conn, "SELECT COUNT(*) as total FROM agenda");
     if ($q_agenda) $count_agenda = mysqli_fetch_assoc($q_agenda)['total'];
 } catch (Exception $e) {}
 
-// 4. Hitung total pesan masuk (HANYA YANG BELUM DIBACA / is_read = 0)
+// Hitung total pesan masuk (Hanya yang belum dibaca / is_read = 0)
 try {
     // Jalankan auto-migration: Cek & tambah kolom is_read jika belum ada
     $check_col = mysqli_query($conn, "SHOW COLUMNS FROM `pesan_masuk` LIKE 'is_read'");
@@ -78,7 +71,7 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// Ambil semua pesan masuk terbaru
+// Ambil semua pesan masuk terbaru untuk ditampilkan di inbox admin
 $ambil_pesan = false;
 try {
     $ambil_pesan = mysqli_query($conn, "SELECT * FROM pesan_masuk ORDER BY created_at DESC");
@@ -140,9 +133,8 @@ try {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.05);
         }
-        /* Style Baris Pesan Belum Dibaca */
         .unread-row {
-            background-color: #fffbeb !important; /* Soft yellow highlight */
+            background-color: #fffbeb !important;
             font-weight: 600;
         }
         @media (max-width: 991.98px) {
@@ -165,6 +157,7 @@ try {
 </head>
 <body>
 
+    <!-- Sidebar Menu Admin Gelap Premium -->
     <div class="sidebar d-flex flex-column p-0 shadow">
         <div class="p-4 border-bottom border-secondary text-center">
             <h5 class="fw-bold text-warning mb-0"><i class="bi bi-shield-lock-fill me-2"></i>ADMIN PANEL</h5>
@@ -226,7 +219,7 @@ try {
             <span class="fw-bold text-primary">ADMIN PANEL</span>
         </div>
 
-        <!-- Banner Notifikasi -->
+        <!-- Banner Notifikasi Status Tindakan -->
         <?php if (!empty($alert_sukses)) : ?>
             <div class="alert alert-success alert-dismissible fade show rounded-3 small shadow-sm mb-4" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> <?= $alert_sukses; ?>
@@ -242,12 +235,13 @@ try {
         <?php endif; ?>
 
         <?php if ($page == 'home') : ?>
+            <!-- SEKSI 1: BERANDA STATISTIK UTAMA -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold text-dark mb-0">Selamat Datang, Admin!</h2>
                 <span class="text-muted small"><i class="bi bi-calendar-check me-1"></i> Hari ini: <?= date('d M Y'); ?></span>
             </div>
 
-            <!-- Grid Statistik Utama -->
+            <!-- Grid Infografis Data Real-time -->
             <div class="row g-4 mb-5">
                 <div class="col-md-3">
                     <div class="card stat-card bg-white p-4 h-100 shadow-sm border-start border-primary border-4">
@@ -303,7 +297,7 @@ try {
                 </div>
             </div>
 
-            <!-- Ringkasan Singkat Pesan Masuk Terakhir -->
+            <!-- Ringkasan Inbox Pesan Masuk Terbaru -->
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white">
                 <div class="d-flex justify-content-between align-items-center mb-4">
                     <h5 class="fw-bold mb-0 text-dark"><i class="bi bi-chat-left-dots text-primary me-2"></i>Pesan Masuk Terbaru</h5>
@@ -344,6 +338,7 @@ try {
             </div>
 
         <?php elseif ($page == 'pesan') : ?>
+            <!-- SEKSI 2: KOTAK PESAN MASUK UTUH -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="fw-bold text-dark mb-1">Kotak Pesan Masuk</h2>
@@ -395,13 +390,13 @@ try {
                                     </td>
                                     <td class="text-center">
                                         <div class="d-flex justify-content-center gap-2">
-                                            <!-- Tombol Lihat Detail Pesan & Tandai Telah Dibaca -->
+                                            <!-- Tombol Lihat Detail Pesan -->
                                             <button type="button" class="btn btn-sm btn-outline-primary rounded-3" 
                                                     onclick="bukaDetailPesan(<?= $pesan['id']; ?>, '<?= addslashes(htmlspecialchars($pesan['nama'])); ?>', '<?= addslashes(htmlspecialchars($pesan['email'])); ?>', '<?= addslashes(htmlspecialchars($pesan['subjek'])); ?>', '<?= addslashes(nl2br(htmlspecialchars($pesan['pesan']))); ?>', '<?= date('d M Y, H:i', strtotime($pesan['created_at'])); ?> WITA', <?= $pesan['is_read']; ?>)" 
                                                     title="Baca Detail">
                                                 <i class="bi bi-eye-fill"></i>
                                             </button>
-                                            <!-- Tombol Pemicu Modal Hapus -->
+                                            <!-- Tombol Hapus Pesan -->
                                             <button type="button" class="btn btn-sm btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#modalHapus<?= $pesan['id']; ?>" title="Hapus Permanen">
                                                 <i class="bi bi-trash3-fill"></i>
                                             </button>
@@ -409,7 +404,7 @@ try {
                                     </td>
                                 </tr>
 
-                                <!-- Bootstrap Modal Konfirmasi Hapus -->
+                                <!-- Modal Konfirmasi Hapus Pesan -->
                                 <div class="modal fade" id="modalHapus<?= $pesan['id']; ?>" tabindex="-1" aria-hidden="true">
                                   <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content border-0 rounded-4 shadow">
@@ -422,7 +417,7 @@ try {
                                       </div>
                                       <div class="modal-footer border-0 pt-0">
                                         <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Batalkan</button>
-                                        <a href="dashboard.php?page=pesan&action=hapus&id=<?= $pesan['id']; ?>" class="btn btn-danger rounded-3 px-3">Ya, Hapus</a>
+                                        <a href="dashboard.php?page=pesan&action=hapus&id=<?= $pesan['id']; ?>" class="btn btn-danger rounded-3 px-3">Ya, Hapus Data</a>
                                       </div>
                                     </div>
                                   </div>
@@ -483,6 +478,7 @@ try {
       </div>
     </div>
 
+    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         // Fitur klik toggle sidebar untuk perangkat seluler/mobile
@@ -496,7 +492,6 @@ try {
 
         // Fungsi interaktif membuka detail pesan dan menandainya sebagai sudah dibaca secara asinkron (AJAX)
         function bukaDetailPesan(id, nama, email, subjek, pesan, tanggal, is_read) {
-            // Isikan konten modal secara dinamis
             document.getElementById('det-nama').innerText = nama;
             document.getElementById('det-email').innerText = email;
             document.getElementById('det-email').href = "mailto:" + email;
@@ -505,7 +500,6 @@ try {
             document.getElementById('det-pesan').innerHTML = pesan;
             document.getElementById('det-btn-reply').href = "mailto:" + email + "?subject=Re: " + encodeURIComponent(subjek);
 
-            // Tampilkan modal detail
             const modal = new bootstrap.Modal(document.getElementById('modalDetailPesan'));
             modal.show();
 
@@ -515,13 +509,11 @@ try {
                     .then(response => response.json())
                     .then(data => {
                         if (data.status === 'success') {
-                            // Ubah gaya visual baris secara instan agar tidak perlu refresh halaman
                             const row = document.getElementById('row-pesan-' + id);
                             if (row) {
                                 row.classList.remove('unread-row');
                                 row.querySelectorAll('.fw-bold').forEach(el => el.classList.remove('fw-bold'));
                             }
-                            // Ubah icon amplop menjadi amplop terbuka
                             const icon = document.getElementById('icon-envelope-' + id);
                             if (icon) {
                                 icon.classList.remove('bi-envelope-fill', 'text-danger');
@@ -533,7 +525,7 @@ try {
             }
         }
 
-        // Ketika modal ditutup, reload halaman agar perhitungan badge sidebar di PHP terupdate totalnya secara akurat
+        // Ketika modal ditutup, reload halaman agar badge di sidebar PHP terupdate secara akurat
         const detailModalEl = document.getElementById('modalDetailPesan');
         if (detailModalEl) {
             detailModalEl.addEventListener('hidden.bs.modal', function () {

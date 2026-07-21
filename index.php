@@ -105,7 +105,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           <div class="col-md-3"><div class="mini-stat"><h3>5.324</h3><p>Guru</p></div></div>
           <div class="col-md-3"><div class="mini-stat"><h3>243</h3><p>Kepala Sekolah</p></div></div>
           <div class="col-md-3"><div class="mini-stat"><h3>57</h3><p>Pengawas</p></div></div>
-          <div class="col-md-3"><div class="mini-stat"><h3>189</h3><p>Tenaga Administrasi</p></div></div>
+          <div class="col-md-3"><div class="mini-stat"><h3>189</h3><p>Tenaga Administrasi</p></div>
         </div>
       </div>
     </section>
@@ -129,7 +129,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
       </div>
     </section>
 
-    <!--- AKSES CEPAT (HREF SUDAH DIUBAH KE HALAMAN PUBLIK GURU/VISITOR) --->
+    <!--- AKSES CEPAT --->
     <section class="container my-5">
       <div class="text-center mb-5">
         <h2 class="fw-bold text-dark">Akses Cepat</h2>
@@ -151,20 +151,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </a>
         </div>
 
-        <!-- 2. NUPTK (Diubah dari kelola.php menjadi nuptk.php khusus visitor) -->
-        <div class="col-md-6 col-lg-3">
-          <a href="nuptk.php" class="text-decoration-none text-dark d-block h-100">
-            <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
-              <div class="text-success mb-3">
-                <i class="bi bi-card-text fs-1"></i>
-              </div>
-              <h4 class="fw-bold mb-2">NUPTK</h4>
-              <p class="text-muted small mb-0">Cek status, validasi, dan riwayat NUPTK GTK</p>
-            </div>
-          </a>
-        </div>
-
-        <!-- 3. Sertifikasi (Diubah dari kelola.php menjadi sertifikasi.php khusus visitor) -->
+        <!-- 2. Sertifikasi (Diubah dari kelola.php menjadi sertifikasi.php khusus visitor) -->
         <div class="col-md-6 col-lg-3">
           <a href="sertifikasi.php" class="text-decoration-none text-dark d-block h-100">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
@@ -177,7 +164,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </a>
         </div>
 
-        <!-- 4. Unduhan -->
+        <!-- 3. Unduhan -->
         <div class="col-md-6 col-lg-3">
           <a href="unduhan.php" class="text-decoration-none text-dark d-block h-100">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">

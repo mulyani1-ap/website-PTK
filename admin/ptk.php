@@ -5,19 +5,8 @@ include "../config/database.php";
 $alert_sukses = "";
 $alert_gagal = "";
 
-// 1. AUTO-RESOLVER: Mencari nama tabel asli secara aman tanpa memicu crash
-$table_gtk = 'data-gtk';
-foreach (['data-gtk', 'data_gtk', 'datagtk'] as $t) {
-    try {
-        $q = mysqli_query($conn, "SELECT COUNT(*) as total FROM `$t`");
-        if ($q !== false) {
-            $table_gtk = $t;
-            break;
-        }
-    } catch (Exception $e) {
-        continue;
-    }
-}
+// 1. SASARAN UTAMA: Langsung tembak ke tabel 'ptk' sesuai phpMyAdmin Anda
+$table_gtk = 'ptk';
 
 // 2. Logika Hapus Data GTK
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
@@ -34,14 +23,14 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 3. Ambil total pesan masuk untuk badge notifikasi sidebar
+// 3. Ambil total pesan masuk untuk badge notifikasi sidebar (Hanya yang belum dibaca)
 $count_pesan = 0;
 try {
-    $q_pesan = mysqli_query($conn, "SELECT COUNT(*) as total FROM pesan_masuk");
+    $q_pesan = mysqli_query($conn, "SELECT COUNT(*) as total FROM pesan_masuk WHERE is_read = 0");
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 4. Ambil semua data GTK dari database
+// 4. Ambil semua data GTK dari database ptk
 $ambil_gtk = false;
 try {
     $ambil_gtk = mysqli_query($conn, "SELECT * FROM `$table_gtk` ORDER BY nama ASC");
@@ -222,7 +211,7 @@ try {
                         $no = 1;
                         if ($ambil_gtk && mysqli_num_rows($ambil_gtk) > 0) {
                             while ($row = mysqli_fetch_assoc($ambil_gtk)) {
-                                $jabatan = htmlspecialchars($row['jabatan'] ?? $row['status_kepegawaian'] ?? 'Pendidik');
+                                $jabatan = htmlspecialchars($row['jabatan'] ?? 'Pendidik');
                                 
                                 // Memilih warna badge jabatan agar variatif
                                 $badge_class = 'bg-primary';
@@ -236,7 +225,7 @@ try {
                                 <td>
                                     <span class="fw-semibold text-dark d-block"><?= htmlspecialchars($row['nama']); ?></span>
                                     <small class="text-muted" style="font-size: 11px;">
-                                        <i class="bi bi-building me-1"></i><?= htmlspecialchars($row['instansi'] ?? $row['sekolah'] ?? '-'); ?>
+                                        <i class="bi bi-building me-1"></i><?= htmlspecialchars($row['sekolah_asal'] ?? '-'); ?>
                                     </small>
                                 </td>
                                 <td class="text-secondary fw-mono"><?= htmlspecialchars($row['nip'] ?? '-'); ?></td>
