@@ -22,7 +22,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
     <style>
       /* CSS Tambahan khusus untuk mengatur kerapian logo di topbar */
       .topbar-logo {
-        height: 40px; /* Atur tinggi logo di topbar */
+        height: 40px; 
         width: auto;
       }
 
@@ -33,6 +33,34 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
       .card-hover-effect:hover {
         transform: translateY(-5px);
         box-shadow: 0 .5rem 1.5rem rgba(0,0,0,.1) !important;
+      }
+      
+      /* Membuat container bisa di-scroll ke samping dengan mulus */
+      .scroll-horizontal {
+          display: flex;
+          flex-wrap: nowrap;
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch; 
+          gap: 1.5rem;
+          padding-bottom: 1rem;
+          scroll-snap-type: x mandatory;
+      }
+
+      /* Menyembunyikan tampilan scrollbar */
+      .scroll-horizontal::-webkit-scrollbar {
+          display: none;
+      }
+      .scroll-horizontal {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+      }
+
+      /* Mencegah card ter-compress */
+      .scroll-horizontal .card {
+          min-width: 320px; 
+          max-width: 350px;
+          flex: 0 0 auto;
+          scroll-snap-align: start;
       }
     </style>
   </head>
@@ -129,14 +157,14 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
       </div>
     </section>
 
-    <!--- AKSES CEPAT --->
+<!--- AKSES CEPAT --->
     <section class="container my-5">
       <div class="text-center mb-5">
         <h2 class="fw-bold text-dark">Akses Cepat</h2>
         <p class="text-muted">Layanan utama Bidang Pembinaan Tenaga Kependidikan</p>
       </div>
 
-      <div class="row g-4 text-center">
+      <div class="row g-4 text-center justify-content-center">
         
         <!-- 1. Data GTK -->
         <div class="col-md-6 col-lg-3">
@@ -151,7 +179,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </a>
         </div>
 
-        <!-- 2. Sertifikasi (Diubah dari kelola.php menjadi sertifikasi.php khusus visitor) -->
+        <!-- 2. Sertifikasi -->
         <div class="col-md-6 col-lg-3">
           <a href="sertifikasi.php" class="text-decoration-none text-dark d-block h-100">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
@@ -176,6 +204,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
             </div>
           </a>
         </div>
+        
       </div>
     </section>
 
@@ -228,34 +257,34 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </div>
         </div>
 
-        <div class="row g-4">
+        <!-- Menerapkan Horizontal Scroll di Sini -->
+        <div class="scroll-horizontal py-2">
           <?php
-          // Query bersyarat berdasarkan keyword pencarian
+          // Query bersyarat berdasarkan keyword pencarian (Limit dinaikkan jadi 10 agar bisa di-scroll panjang)
           if (!empty($keyword)) {
-              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' AND (judul LIKE '%$keyword%' OR ringkasan LIKE '%$keyword%') ORDER BY id DESC LIMIT 3");
+              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' AND (judul LIKE '%$keyword%' OR ringkasan LIKE '%$keyword%') ORDER BY id DESC LIMIT 10");
           } else {
-              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' ORDER BY id DESC LIMIT 3");
+              $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' ORDER BY id DESC LIMIT 10");
           }
 
           if(mysqli_num_rows($berita) > 0) {
               while($row = mysqli_fetch_assoc($berita)):
           ?>
-          <div class="col-lg-4">
-            <div class="card news-card h-100">
+            <!-- Pembungkus col-lg-4 dihapus agar card bisa sejajar memanjang -->
+            <div class="card news-card h-100 shadow-sm">
               <img src="uploads/berita/<?= $row['thumbnail']; ?>" class="card-img-top" alt="Gambar Berita" style="height:220px;object-fit:cover;" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e0e0e0/666666?text=No+Image';">
-              <div class="card-body">
-                <span class="badge bg-primary mb-3">Berita</span>
-                <h5><?= $row['judul']; ?></h5>
-                <p><?= substr($row['ringkasan'],0,100); ?>...</p>
-                <a href="detail-berita.php?id=<?= $row['id']; ?>" class="btn btn-primary">Baca Selengkapnya</a>
+              <div class="card-body d-flex flex-column">
+                <span class="badge bg-primary mb-3 align-self-start">Berita</span>
+                <h5 class="text-truncate"><?= $row['judul']; ?></h5>
+                <p style="display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;"><?= htmlspecialchars($row['ringkasan']); ?></p>
+                <a href="detail-berita.php?id=<?= $row['id']; ?>" class="btn btn-primary mt-auto">Baca Selengkapnya</a>
               </div>
             </div>
-          </div>
           <?php 
               endwhile;
           } else {
           ?>
-              <div class="col-12 text-center text-muted py-4">
+              <div class="w-100 text-center text-muted py-4">
                   <i class="bi bi-newspaper fs-2 d-block mb-2"></i>
                   <p class="mb-0">Berita dengan kata kunci tersebut tidak ditemukan.</p>
               </div>

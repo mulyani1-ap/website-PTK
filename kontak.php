@@ -31,7 +31,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hubungi Kami | PTK Bontang</title>
-    <!-- Bootstrap 5 & Icons -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
@@ -80,7 +79,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div>
                             <h6 class="fw-bold mb-1">Alamat Kantor</h6>
-                            <p class="text-muted small mb-0">Dinas Pendidikan dan Kebudayaan Kota Bontang,<br>Kalimantan Timur, Indonesia.</p>
+                            <p class="text-muted small mb-0">Jl. Bessai Berinta, Bontang Lestari, Bontang Selatan<br>Kalimantan Timur, Indonesia.</p>
                         </div>
                     </div>
 
@@ -91,7 +90,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div>
                             <h6 class="fw-bold mb-1">Surel Resmi</h6>
-                            <p class="text-muted small mb-0">disdikbud@bontangkota.go.id<br>ptk.bontang@gmail.com</p>
+                            <p class="text-muted small mb-0">disdikbud.bontangkota.go.id<br>@disdikbud.bontang (Instagram)</p>
                         </div>
                     </div>
 
@@ -102,7 +101,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </div>
                         <div>
                             <h6 class="fw-bold mb-1">Jam Operasional</h6>
-                            <p class="text-muted small mb-0">Senin - Kamis: 07:30 - 16:00 WITA<br>Jumat: 07:30 - 11:30 WITA</p>
+                            <p class="text-muted small mb-0">Senin - Kamis: 07:30 - 16:00 WITA<br>Jumat: 07:30 - 11:00 WITA</p>
                         </div>
                     </div>
 
@@ -110,8 +109,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Integrasi Tombol Cepat WhatsApp -->
                     <h6 class="fw-bold text-dark mb-2">Layanan Respons Cepat:</h6>
-                    <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success rounded-3 w-100 py-2 fw-bold">
-                        <i class="bi bi-whatsapp me-2"></i> Hubungi via WhatsApp Chat
+                    <a href="https://wa.me/6282195130786" target="_blank" class="btn btn-success rounded-3 w-100 py-2 fw-bold">
+                        <i class="bi bi-whatsapp me-2"></i> Hubungi via WhatsApp Chat 
                     </a>
                 </div>
             </div>
@@ -140,11 +139,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <form action="kontak.php" method="POST">
                         <div class="row g-3">
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Nama Lengkap</label>
+                                <label class="form-label small fw-bold">Nama Lengkap Pengirim</label>
                                 <input type="text" name="nama" class="form-control rounded-3" placeholder="Contoh: Siti Aminah" required>
                             </div>
                             <div class="col-md-6">
-                                <label class="form-label small fw-bold">Alamat Email</label>
+                                <label class="form-label small fw-bold">Email Pengirim</label>
                                 <input type="email" name="email" class="form-control rounded-3" placeholder="siti@gmail.com" required>
                             </div>
                             <div class="col-lg-12">
