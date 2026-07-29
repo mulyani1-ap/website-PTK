@@ -155,7 +155,7 @@ try {
                 <i class="bi bi-house-door me-1"></i> Lihat Beranda Utama
             </a>
             <a href="logout.php" class="btn btn-danger w-100 btn-sm rounded-3 mt-2">
-                <i class="bi bi-box-arrow-right me-1"></i> Keluar / Logout
+                <i class="bi bi-box-arrow-right me-1"></i> Logout
             </a>
         </div>
     </div>
@@ -200,7 +200,7 @@ try {
                     <thead class="table-light">
                         <tr>
                             <th style="width: 5%">No</th>
-                            <th style="width: 35%">Nama Personnel</th>
+                            <th style="width: 35%">Nama</th>
                             <th style="width: 20%">NIP</th>
                             <th style="width: 25%">Jabatan</th>
                             <th style="width: 15%" class="text-center">Aksi</th>
@@ -263,7 +263,7 @@ try {
                                   </div>
                                 </div>
                               </div>
-                            </div>
+                            </div>~
 
                         <?php 
                             }

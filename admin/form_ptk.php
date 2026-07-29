@@ -223,19 +223,19 @@ try {
 
                     <!-- Input Nama Lengkap -->
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Nama Lengkap Personnel</label>
+                        <label class="form-label small fw-bold text-secondary">Nama Lengkap</label>
                         <input type="text" name="nama" class="form-control rounded-3" placeholder="Contoh: Siti Aminah, S.Pd" value="<?= htmlspecialchars($nama); ?>" required>
                     </div>
 
                     <!-- Input NIP -->
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">NIP / ID Pegawai</label>
+                        <label class="form-label small fw-bold text-secondary">NIP.</label>
                         <input type="text" name="nip" class="form-control rounded-3" placeholder="Masukkan 18 digit NIP atau tulis '-' jika non-PNS" value="<?= htmlspecialchars($nip); ?>">
                     </div>
 
                     <!-- Input Jabatan -->
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Jabatan / Peran</label>
+                        <label class="form-label small fw-bold text-secondary">Jabatan</label>
                         <select name="jabatan" class="form-select rounded-3" required>
                             <option value="">-- Pilih Jabatan --</option>
                             <option value="Guru" <?= $jabatan == 'Guru' ? 'selected' : ''; ?>>Guru</option>
@@ -247,7 +247,7 @@ try {
 
                     <!-- Input Nama Sekolah/Instansi -->
                     <div class="col-md-6">
-                        <label class="form-label small fw-bold text-secondary">Nama Sekolah / Instansi (Sekolah Asal)</label>
+                        <label class="form-label small fw-bold text-secondary">Nama Sekolah / Instansi</label>
                         <input type="text" name="sekolah_asal" class="form-control rounded-3" placeholder="Contoh: SDN 001 Bontang Utara" value="<?= htmlspecialchars($sekolah_asal); ?>" required>
                     </div>
 

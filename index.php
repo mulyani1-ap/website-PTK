@@ -116,7 +116,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
             <h1 class="display-3 fw-bold mb-4">Membangun Tenaga Kependidikan Berkualitas</h1>
             <p class="lead mb-4">Sistem informasi dan layanan terpadu Bidang Pembinaan Tenaga Kependidikan Dinas Pendidikan dan Kebudayaan Kota Bontang.</p>
             <div class="d-flex gap-3">
-              <a href="kontak.html" class="btn btn-light btn-lg"><i class="bi bi-envelope"></i> Hubungi Kami</a>
+              <a href="kontak.php" class="btn btn-light btn-lg"><i class="bi bi-envelope"></i> Hubungi Kami</a>
               <a href="profil.html" class="btn btn-outline-light btn-lg">Profil Bidang</a>
             </div>
           </div>
@@ -168,7 +168,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
         
         <!-- 1. Data GTK -->
         <div class="col-md-6 col-lg-3">
-          <a href="data-gtk.php" class="text-decoration-none text-dark d-block h-100">
+          <a href="data_gtk.php" class="text-decoration-none text-dark d-block h-100">
             <div class="card border-0 shadow-sm rounded-4 p-4 bg-white card-hover-effect h-100">
               <div class="text-primary mb-3">
                 <i class="bi bi-person-badge fs-1"></i>
@@ -350,7 +350,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
         </div>
       </div>
     </section>
-
+<!--- AGENDA KEGIATAN --->
     <section class="py-5 bg-white">
       <div class="container">
         <div class="text-center mb-5">

@@ -115,7 +115,7 @@ if (!empty($keyword)) {
                                 <td><?= $no++; ?></td>
                                 <td class="fw-bold text-dark"><?= htmlspecialchars($row['nama']); ?></td>
                                 <td><?= htmlspecialchars($row['nip'] ?? '-'); ?></td>
-                                <td><?= htmlspecialchars($row['sekolah'] ?? $row['instansi'] ?? '-'); ?></td>
+                                <td><?= htmlspecialchars($row['sekolah_asal']); ?></td>
                                 <td class="text-center">
                                     <span class="badge bg-info text-dark rounded-pill px-3 py-2"><i class="bi bi-patch-check-fill me-1"></i> Tersertifikasi</span>
                                 </td>
