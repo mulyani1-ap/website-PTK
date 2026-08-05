@@ -9,7 +9,6 @@ if (!empty($jenjang)) {
     $filter_sql .= " AND `sekolah_asal` LIKE '%$jenjang%'";
 }
 
-// Aturan Cerdas: Mendeteksi sekolah Negeri berdasarkan kata kunci penciri umum
 $negeri_keywords = "(`sekolah_asal` LIKE '%Negeri%' 
                     OR `sekolah_asal` LIKE '%SDN%' 
                     OR `sekolah_asal` LIKE '%SMPN%' 
@@ -19,10 +18,8 @@ $negeri_keywords = "(`sekolah_asal` LIKE '%Negeri%'
 
 if (!empty($status)) {
     if ($status == 'Negeri') {
-        // Jika pilih Negeri, cari yang mengandung kata kunci Negeri
         $filter_sql .= " AND $negeri_keywords";
     } elseif ($status == 'Swasta') {
-        // Jika pilih Swasta, cari sekolah yang TIDAK mengandung kata kunci Negeri
         $filter_sql .= " AND NOT $negeri_keywords";
     }
 }
@@ -36,8 +33,10 @@ $data_kepsek = mysqli_fetch_assoc($query_kepsek)['total'] ?? 0;
 $query_pengawas = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `ptk` WHERE `jabatan`='Pengawas' $filter_sql");
 $data_pengawas = mysqli_fetch_assoc($query_pengawas)['total'] ?? 0;
 
-$query_admin = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `ptk` WHERE `jabatan`='Tenaga Administrasi' $filter_sql");
-$data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
+// Hitung total Tenaga Kependidikan / Administrasi dari database
+$query_admin = mysqli_query($conn, "SELECT COUNT(*) as total FROM `ptk` WHERE `jabatan` = 'Tenaga Kependidikan' OR `jabatan` = 'Tenaga Administria' OR `jabatan` LIKE '%Kependidikan%' OR `jabatan` LIKE '%Administrasi%'");
+$row_admin = mysqli_fetch_assoc($query_admin);
+$data_admin = $row_admin['total'];
 ?>
 
 <!doctype html>
@@ -58,7 +57,6 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
   </head>
 
   <body class="bg-light">
-    <!-- -->
     <div class="topbar py-2 text-white small" style="background-color: #002d62">
       <div class="container">
         <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
@@ -100,7 +98,6 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
     </header>
 
     <main class="container mb-5">
-        <!-- -->
         <div class="card border-0 shadow-sm rounded-4 p-4 bg-white mb-4">
             <h5 class="fw-bold mb-3 text-dark"><i class="bi bi-search text-primary me-2"></i>Papan Pencarian Berdasarkan Wilayah Kerja</h5>
             <form action="data_gtk.php" method="GET" class="row g-3">
@@ -140,11 +137,10 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
             <?php } ?>
         </div>
 
-        <!-- -->
         <div class="row g-4 text-center mb-5">
             <div class="col-6 col-lg-3">
               <div class="card border-0 shadow-sm rounded-4 p-3 bg-white card-clickable" 
-                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Guru">
+                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Guru" data-judul="Guru">
                 <div class="text-primary mb-2"><i class="bi bi-person-video3 fs-2"></i></div>
                 <h3 class="fw-bold text-dark mb-1"><?= number_format($data_guru, 0, ',', '.'); ?></h3>
                 <span class="text-muted small fw-medium">Guru</span>
@@ -152,7 +148,7 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
             </div>
             <div class="col-6 col-lg-3">
               <div class="card border-0 shadow-sm rounded-4 p-3 bg-white card-clickable" 
-                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Kepala Sekolah">
+                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Kepala Sekolah" data-judul="Kepala Sekolah">
                 <div class="text-success mb-2"><i class="bi bi-person-workspace fs-2"></i></div>
                 <h3 class="fw-bold text-dark mb-1"><?= number_format($data_kepsek, 0, ',', '.'); ?></h3>
                 <span class="text-muted small fw-medium">Kepala Sekolah</span>
@@ -160,23 +156,26 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
             </div>
             <div class="col-6 col-lg-3">
               <div class="card border-0 shadow-sm rounded-4 p-3 bg-white card-clickable" 
-                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Pengawas">
+                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Pengawas" data-judul="Pengawas">
                 <div class="text-warning mb-2"><i class="bi bi-shield-check fs-2"></i></div>
                 <h3 class="fw-bold text-dark mb-1"><?= number_format($data_pengawas, 0, ',', '.'); ?></h3>
                 <span class="text-muted small fw-medium">Pengawas</span>
               </div>
             </div>
             <div class="col-6 col-lg-3">
+
+            
+              <!-- Perhatikan bagian ini: data-kategori = "Tenaga Administrasi", data-judul = "Tenaga Kependidikan" -->
               <div class="card border-0 shadow-sm rounded-4 p-3 bg-white card-clickable" 
-                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Tenaga Administrasi">
+                   data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Tenaga Administrasi" data-judul="Tenaga Kependidikan">
                 <div class="mb-2" style="color: #6f42c1"><i class="bi bi-file-earmark-text fs-2"></i></div>
                 <h3 class="fw-bold text-dark mb-1"><?= number_format($data_admin, 0, ',', '.'); ?></h3>
-                <span class="text-muted small fw-medium">Tenaga Administrasi</span>
+                <!-- Tampilan diubah jadi Tenaga Kependidikan -->
+                <span class="text-muted small fw-medium">Tenaga Kependidikan</span> 
               </div>
             </div>
         </div>
 
-        <!-- -->
         <div class="row g-4">
             <div class="col-lg-6">
               <div class="card border-0 shadow-sm rounded-4 p-4 bg-white h-100">
@@ -194,7 +193,7 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
                       <tr><td>1</td><td>Guru</td><td class="text-end fw-bold"><?= number_format($data_guru, 0, ',', '.'); ?></td></tr>
                       <tr><td>2</td><td>Kepala Sekolah</td><td class="text-end fw-bold"><?= number_format($data_kepsek, 0, ',', '.'); ?></td></tr>
                       <tr><td>3</td><td>Pengawas</td><td class="text-end fw-bold"><?= number_format($data_pengawas, 0, ',', '.'); ?></td></tr>
-                      <tr><td>4</td><td>Tenaga Administrasi</td><td class="text-end fw-bold"><?= number_format($data_admin, 0, ',', '.'); ?></td></tr>
+                      <tr><td>4</td><td>Tenaga Kependidikan</td><td class="text-end fw-bold"><?= number_format($data_admin, 0, ',', '.'); ?></td></tr>
                     </tbody>
                   </table>
                 </div>
@@ -212,27 +211,37 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
         </div>
     </main>
 
-    <!-- -->
+    <!-- Modal Detail dengan Search Bar & Kolom Baru -->
     <div class="modal fade" id="modalDetail" tabindex="-1" aria-hidden="true">
-      <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable">
+      <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
         <div class="modal-content border-0 shadow rounded-4">
           <div class="modal-header bg-primary text-white border-0 py-3">
             <h5 class="modal-title fw-bold">Detail Data</h5>
             <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body p-4">
+            
+            <div class="mb-3">
+              <div class="input-group">
+                <span class="input-group-text bg-light"><i class="bi bi-search"></i></span>
+                <input type="text" id="searchDetailInput" class="form-control" placeholder="Cari nama, NIP, jabatan, atau sekolah...">
+              </div>
+            </div>
+
             <div class="table-responsive">
               <table class="table table-bordered table-hover align-middle mb-0">
                 <thead class="table-light">
                   <tr>
-                    <th style="width: 8%">No</th>
+                    <th style="width: 5%">No</th>
                     <th>Nama Personnel</th>
                     <th>NIP / ID</th>
+                    <th>Jenis Jabatan</th> <!-- Header baru -->
                     <th>Instansi / Sekolah</th>
                   </tr>
                 </thead>
                 <tbody id="tempat-data-detail">
-                  <tr><td colspan="4" class="text-center text-muted py-4">Memuat data...</td></tr>
+                  <!-- Colspan diubah jadi 5 -->
+                  <tr><td colspan="5" class="text-center text-muted py-4">Memuat data...</td></tr> 
                 </tbody>
               </table>
             </div>
@@ -254,23 +263,52 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
       let currentChart = null;
 
       const modalDetail = document.getElementById('modalDetail');
+      const searchDetailInput = document.getElementById('searchDetailInput');
+
       if (modalDetail) {
         modalDetail.addEventListener('show.bs.modal', event => {
           const card = event.relatedTarget; 
+          // Ambil kategori untuk dikirim ke database
           const kategori = card.getAttribute('data-kategori'); 
+          // Ambil judul untuk ditampilkan di UI
+          const judul = card.getAttribute('data-judul'); 
           
-          modalDetail.querySelector('.modal-title').textContent = 'Detail Data Personnel - ' + kategori;
+          // Set Judul Modalnya sesuai data-judul
+          modalDetail.querySelector('.modal-title').textContent = 'Detail Data Personnel - ' + judul;
+          
           const tabelBody = document.getElementById('tempat-data-detail');
-          tabelBody.innerHTML = '<tr><td colspan="4" class="text-center text-muted py-4"><div class="spinner-border spinner-border-sm text-primary me-2"></div> Memuat data...</td></tr>';
+          tabelBody.innerHTML = '<tr><td colspan="5" class="text-center text-muted py-4"><div class="spinner-border spinner-border-sm text-primary me-2"></div> Memuat data...</td></tr>';
+          
+          if(searchDetailInput) searchDetailInput.value = '';
 
           const url = `get-detail.php?kategori=${encodeURIComponent(kategori)}&jenjang=${encodeURIComponent('<?= $jenjang; ?>')}&status=${encodeURIComponent('<?= $status; ?>')}`;
 
           fetch(url)
             .then(response => response.text())
-            .then(html => { tabelBody.innerHTML = html; })
+            .then(html => { 
+                tabelBody.innerHTML = html; 
+            })
             .catch(err => {
-              tabelBody.innerHTML = '<tr><td colspan="4" class="text-center text-danger py-4">Gagal memuat detail data. Silakan coba lagi.</td></tr>';
+              tabelBody.innerHTML = '<tr><td colspan="5" class="text-center text-danger py-4">Gagal memuat detail data. Silakan coba lagi.</td></tr>';
             });
+        });
+      }
+
+      if (searchDetailInput) {
+        searchDetailInput.addEventListener('keyup', function() {
+          const keyword = this.value.toLowerCase();
+          const rows = document.querySelectorAll('#tempat-data-detail tr');
+
+          rows.forEach(row => {
+            if (row.cells.length > 1) {
+              const textRow = row.textContent.toLowerCase();
+              if (textRow.includes(keyword)) {
+                row.style.display = '';
+              } else {
+                row.style.display = 'none';
+              }
+            }
+          });
         });
       }
 
@@ -278,7 +316,8 @@ $data_admin = mysqli_fetch_assoc($query_admin)['total'] ?? 0;
       currentChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          labels: ['Guru', 'Kepala Sekolah', 'Pengawas', 'Administrasi'],
+          // Label di grafik diubah menjadi Tenaga Kependidikan
+          labels: ['Guru', 'Kepala Sekolah', 'Pengawas', 'Tenaga Kependidikan'],
           datasets: [{
             label: 'Jumlah Personnel',
             data: [<?= $data_guru; ?>, <?= $data_kepsek; ?>, <?= $data_pengawas; ?>, <?= $data_admin; ?>],

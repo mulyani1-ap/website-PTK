@@ -1,11 +1,9 @@
 <?php
-// Menghubungkan ke database dengan naik 1 folder ke folder induk
 include "../config/database.php";
 
 $alert_sukses = "";
 $alert_gagal = "";
 
-// 1. SASARAN UTAMA: Langsung tembak ke tabel 'ptk' sesuai phpMyAdmin Anda
 $table_gtk = 'ptk';
 
 // 2. Logika Hapus Data GTK
@@ -213,12 +211,13 @@ try {
                             while ($row = mysqli_fetch_assoc($ambil_gtk)) {
                                 $jabatan = htmlspecialchars($row['jabatan'] ?? 'Pendidik');
                                 
-                                // Memilih warna badge jabatan agar variatif
-                                $badge_class = 'bg-primary';
-                                if (stripos($jabatan, 'guru') !== false) $badge_class = 'bg-info text-dark';
-                                elseif (stripos($jabatan, 'kepala') !== false) $badge_class = 'bg-success';
-                                elseif (stripos($jabatan, 'pengawas') !== false) $badge_class = 'bg-warning text-dark';
-                                elseif (stripos($jabatan, 'administrasi') !== false) $badge_class = 'bg-secondary';
+     // Memilih warna badge jabatan agar variatif
+$badge_class = 'bg-primary';
+if (stripos($jabatan, 'guru') !== false) $badge_class = 'bg-info text-dark';
+elseif (stripos($jabatan, 'kepala') !== false) $badge_class = 'bg-success';
+elseif (stripos($jabatan, 'pengawas') !== false) $badge_class = 'bg-warning text-dark';
+// INI YANG DIUBAH: Tambahkan pengecekan untuk 'kependidikan'
+elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'administrasi') !== false) $badge_class = 'bg-secondary';
                         ?>
                             <tr>
                                 <td><?= $no++; ?></td>
@@ -230,8 +229,15 @@ try {
                                 </td>
                                 <td class="text-secondary fw-mono"><?= htmlspecialchars($row['nip'] ?? '-'); ?></td>
                                 <td>
-                                    <span class="badge <?= $badge_class; ?> rounded-pill px-2.5 py-1.5 small"><?= $jabatan; ?></span>
-                                </td>
+    <span class="badge <?= $badge_class; ?> rounded-pill px-2.5 py-1.5 small"><?= $jabatan; ?></span>
+    
+    <!-- TAMBAHAN UNTUK MEMUNCULKAN DETAIL JABATAN -->
+    <?php if (!empty($row['detail_jabatan'])): ?>
+        <span class="d-block mt-1 text-muted fw-medium" style="font-size: 11px;">
+            <i class="bi bi-chevron-right me-1"></i><?= htmlspecialchars($row['detail_jabatan']); ?>
+        </span>
+    <?php endif; ?>
+</td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <!-- Tombol Edit -->
@@ -263,7 +269,7 @@ try {
                                   </div>
                                 </div>
                               </div>
-                            </div>~
+                            </div>
 
                         <?php 
                             }
