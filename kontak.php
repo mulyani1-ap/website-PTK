@@ -34,6 +34,21 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <style>
+          .topbar-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .card-hover-effect {
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .card-hover-effect:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
         .icon-box {
             width: 50px;
             height: 50px;
@@ -48,6 +63,37 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 <body class="bg-light">
+     <div class="topbar py-2" style="background-color: #002d62; color: white">
+      <div class="container">
+        <div
+          class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+        >
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+              <img
+                src="assets/images/logo-bontang.png"
+                alt="Logo Bontang"
+                class="topbar-logo"
+              />
+
+              <img
+                src="assets/images/logo-tutwuri.png"
+                alt="Logo Pendidikan"
+                class="topbar-logo"
+              />
+            </div>
+
+            <span class="fw-bold"
+              >DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG</span
+            >
+          </div>
+
+          <div>
+            <span>Bidang Pembinaan Tenaga Kependidikan</span>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Navbar -->
     <nav class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow mb-5">

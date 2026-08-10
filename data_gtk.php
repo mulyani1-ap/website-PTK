@@ -9,18 +9,31 @@ if (!empty($jenjang)) {
     $filter_sql .= " AND `sekolah_asal` LIKE '%$jenjang%'";
 }
 
+// Daftar kata kunci untuk sekolah Negeri
 $negeri_keywords = "(`sekolah_asal` LIKE '%Negeri%' 
-                    OR `sekolah_asal` LIKE '%SDN%' 
-                    OR `sekolah_asal` LIKE '%SMPN%' 
-                    OR `sekolah_asal` LIKE '%TKN%' 
-                    OR `sekolah_asal` LIKE '% N %' 
-                    OR `sekolah_asal` LIKE '% N.%')";
+    OR `sekolah_asal` LIKE '%SDN%' 
+    OR `sekolah_asal` LIKE '%SMPN%' 
+    OR `sekolah_asal` LIKE '%TKN%' 
+    OR `sekolah_asal` LIKE '% N %' 
+    OR `sekolah_asal` LIKE '% N.%')";
 
+// Daftar kata kunci untuk Non-Formal / PAUD (KB, PKBM, SKB, SPS, TPA)
+$non_formal_keywords = "(`sekolah_asal` LIKE '%KB%' 
+    OR `sekolah_asal` LIKE '%PKBM%' 
+    OR `sekolah_asal` LIKE '%SKB%' 
+    OR `sekolah_asal` LIKE '%SPS%' 
+    OR `sekolah_asal` LIKE '%TPA%')";
+
+$filter_sql = "";
 if (!empty($status)) {
     if ($status == 'Negeri') {
-        $filter_sql .= " AND $negeri_keywords";
+        $filter_sql = " AND " . $negeri_keywords;
     } elseif ($status == 'Swasta') {
-        $filter_sql .= " AND NOT $negeri_keywords";
+        // Swasta selain kategori negeri dan non-formal di atas
+        $filter_sql = " AND NOT " . $negeri_keywords . "AND NOT " . $non_formal_keywords;
+    } elseif ($status == 'Non-Formal') {
+        // Khusus memunculkan KB, PKBM, SKB, SPS, TPA
+        $filter_sql = " AND " . $non_formal_keywords;
     }
 }
 
@@ -112,11 +125,13 @@ $data_admin = $row_admin['total'];
                 </div>
                 <div class="col-md-5">
                     <label class="form-label small fw-bold text-secondary">Status Instansi</label>
-                    <select name="status" class="form-select rounded-3">
-                        <option value="">-- Semua Status --</option>
-                        <option value="Negeri" <?= $status == 'Negeri' ? 'selected' : ''; ?>>Negeri</option>
-                        <option value="Swasta" <?= $status == 'Swasta' ? 'selected' : ''; ?>>Swasta</option>
-                    </select>
+                    <select name="status" class="form-select">
+    <option value="">-- Semua Status --</option>
+    <option value="Negeri" <?= ($status == 'Negeri') ? 'selected' : ''; ?>>Negeri</option>
+    <option value="Swasta" <?= ($status == 'Swasta') ? 'selected' : ''; ?>>Swasta</option>
+    <option value="Non-Formal" <?= ($status == 'Non-Formal') ? 'selected' : ''; ?>>KB, PKBM, SKB, SPS, TPA (Non-Formal)</option>
+</select>
+                    
                 </div>
                 <div class="col-md-2 d-flex align-items-end">
                     <button type="submit" class="btn btn-primary rounded-3 w-100 py-2 fw-bold">

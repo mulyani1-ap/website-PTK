@@ -6,6 +6,9 @@ $alert_gagal = "";
 
 $table_gtk = 'ptk';
 
+// 1. Tangkap keyword pencarian jika ada
+$keyword = isset($_GET['keyword']) ? mysqli_real_escape_string($conn, $_GET['keyword']) : '';
+
 // 2. Logika Hapus Data GTK
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_gtk = intval($_GET['id']);
@@ -28,10 +31,15 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 4. Ambil semua data GTK dari database ptk
+// 4. Ambil data GTK dari database (dengan dukungan filter pencarian)
 $ambil_gtk = false;
 try {
-    $ambil_gtk = mysqli_query($conn, "SELECT * FROM `$table_gtk` ORDER BY nama ASC");
+    if (!empty($keyword)) {
+        $query_sql = "SELECT * FROM `$table_gtk` WHERE `nama` LIKE '%$keyword%' OR `nip` LIKE '%$keyword%' OR `jabatan` LIKE '%$keyword%' OR `sekolah_asal` LIKE '%$keyword%' ORDER BY `nama` ASC";
+    } else {
+        $query_sql = "SELECT * FROM `$table_gtk` ORDER BY `nama` ASC";
+    }
+    $ambil_gtk = mysqli_query($conn, $query_sql);
 } catch (Exception $e) {}
 ?>
 
@@ -192,6 +200,28 @@ try {
             </a>
         </div>
 
+        <!-- KOTAK PENCARIAN (SEARCH BAR) -->
+        <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
+            <form action="" method="GET" class="row g-2 align-items-center">
+                <div class="col">
+                    <div class="input-group input-group-merge">
+                        <span class="input-group-text bg-light border-end-0 rounded-start-pill ps-3">
+                            <i class="bi bi-search text-muted"></i>
+                        </span>
+                        <input type="text" name="keyword" class="form-control bg-light border-start-0 rounded-end-pill py-2" 
+                               value="<?= htmlspecialchars($keyword); ?>" 
+                               placeholder="Cari berdasarkan nama, NIP, jabatan, atau sekolah...">
+                    </div>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-dark rounded-pill px-4">Cari</button>
+                    <?php if (!empty($keyword)): ?>
+                        <a href="ptk.php" class="btn btn-outline-secondary rounded-pill ms-2 px-3">Reset</a>
+                    <?php endif; ?>
+                </div>
+            </form>
+        </div>
+
         <div class="card data-card p-4 bg-white">
             <div class="table-responsive">
                 <table class="table table-hover align-middle mb-0">
@@ -211,13 +241,12 @@ try {
                             while ($row = mysqli_fetch_assoc($ambil_gtk)) {
                                 $jabatan = htmlspecialchars($row['jabatan'] ?? 'Pendidik');
                                 
-     // Memilih warna badge jabatan agar variatif
-$badge_class = 'bg-primary';
-if (stripos($jabatan, 'guru') !== false) $badge_class = 'bg-info text-dark';
-elseif (stripos($jabatan, 'kepala') !== false) $badge_class = 'bg-success';
-elseif (stripos($jabatan, 'pengawas') !== false) $badge_class = 'bg-warning text-dark';
-// INI YANG DIUBAH: Tambahkan pengecekan untuk 'kependidikan'
-elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'administrasi') !== false) $badge_class = 'bg-secondary';
+                                // Memilih warna badge jabatan agar variatif
+                                $badge_class = 'bg-primary';
+                                if (stripos($jabatan, 'guru') !== false) $badge_class = 'bg-info text-dark';
+                                elseif (stripos($jabatan, 'kepala') !== false) $badge_class = 'bg-success';
+                                elseif (stripos($jabatan, 'pengawas') !== false) $badge_class = 'bg-warning text-dark';
+                                elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'administrasi') !== false) $badge_class = 'bg-secondary';
                         ?>
                             <tr>
                                 <td><?= $no++; ?></td>
@@ -229,15 +258,14 @@ elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'admini
                                 </td>
                                 <td class="text-secondary fw-mono"><?= htmlspecialchars($row['nip'] ?? '-'); ?></td>
                                 <td>
-    <span class="badge <?= $badge_class; ?> rounded-pill px-2.5 py-1.5 small"><?= $jabatan; ?></span>
-    
-    <!-- TAMBAHAN UNTUK MEMUNCULKAN DETAIL JABATAN -->
-    <?php if (!empty($row['detail_jabatan'])): ?>
-        <span class="d-block mt-1 text-muted fw-medium" style="font-size: 11px;">
-            <i class="bi bi-chevron-right me-1"></i><?= htmlspecialchars($row['detail_jabatan']); ?>
-        </span>
-    <?php endif; ?>
-</td>
+                                    <span class="badge <?= $badge_class; ?> rounded-pill px-2.5 py-1.5 small"><?= $jabatan; ?></span>
+                                    
+                                    <?php if (!empty($row['detail_jabatan'])): ?>
+                                        <span class="d-block mt-1 text-muted fw-medium" style="font-size: 11px;">
+                                            <i class="bi bi-chevron-right me-1"></i><?= htmlspecialchars($row['detail_jabatan']); ?>
+                                        </span>
+                                    <?php endif; ?>
+                                </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
                                         <!-- Tombol Edit -->
@@ -274,7 +302,7 @@ elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'admini
                         <?php 
                             }
                         } else {
-                            echo "<tr><td colspan='5' class='text-center py-5 text-muted'><i class='bi bi-people fs-1 d-block mb-2'></i>Belum ada data GTK di database.</td></tr>";
+                            echo "<tr><td colspan='5' class='text-center py-5 text-muted'><i class='bi bi-search fs-1 d-block mb-2'></i>Tidak ada data GTK yang cocok dengan pencarian.</td></tr>";
                         }
                         ?>
                     </tbody>

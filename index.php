@@ -20,7 +20,6 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
     <link rel="stylesheet" href="assets/css/style.css" />
     
     <style>
-      /* CSS Tambahan khusus untuk mengatur kerapian logo di topbar */
       .topbar-logo {
         height: 40px; 
         width: auto;
@@ -130,14 +129,15 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
     <section class="floating-stats">
       <div class="container">
         <div class="row g-4">
-          <div class="col-md-3"><div class="mini-stat"><h3>5.324</h3><p>Guru</p></div></div>
-          <div class="col-md-3"><div class="mini-stat"><h3>243</h3><p>Kepala Sekolah</p></div></div>
-          <div class="col-md-3"><div class="mini-stat"><h3>57</h3><p>Pengawas</p></div></div>
-          <div class="col-md-3"><div class="mini-stat"><h3>189</h3><p>Tenaga Administrasi</p></div>
+          <div class="col-md-3"><div class="mini-stat"><h3>2.019</h3><p>Guru</p></div></div>
+          <div class="col-md-3"><div class="mini-stat"><h3>175</h3><p>Kepala Sekolah</p></div></div>
+          <div class="col-md-3"><div class="mini-stat"><h3>25</h3><p>Pengawas</p></div></div>
+          <div class="col-md-3"><div class="mini-stat"><h3>371</h3><p>Tenaga Kependidikan</p></div>
         </div>
       </div>
     </section>
 
+    /// SAMBUTAN PAK KABID 
     <section class="container py-5">
       <div class="sambutan-modern">
         <div class="row align-items-center">
@@ -208,12 +208,15 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
       </div>
     </section>
 
+  
     <section class="py-5">
       <div class="container">
         <div class="row align-items-center">
           <div class="col-lg-6">
             <h2 class="section-title">Tentang Bidang PTK</h2>
-            <p>Bidang Pembinaan Tenaga Kependidikan bertugas melaksanakan pembinaan, pengembangan kompetensi, peningkatan kualitas sumber daya manusia, serta pengelolaan administrasi tenaga kependidikan di lingkungan satuan pendidikan Kota Bontang.</p>
+            <p>Bidang Pembinaan Tenaga Kependidikan bertugas melaksanakan pembinaan, pengembangan kompetensi,
+               peningkatan kualitas sumber daya manusia, serta pengelolaan administrasi tenaga kependidikan
+                di lingkungan satuan pendidikan Kota Bontang.</p>
             <a href="profil.html" class="btn btn-primary"> Selengkapnya </a>
           </div>
           <div class="col-lg-6">
@@ -395,6 +398,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
               <li>Profil</li>
               <li>Struktur Organisasi</li>
               <li>Data GTK</li>
+              <li>Kontak</li>
             </ul>
           </div>
           <div class="col-lg-4">

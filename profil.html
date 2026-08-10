@@ -19,23 +19,60 @@
     <link rel="stylesheet" href="assets/css/style.css" />
   </head>
 
-  <body class="bg-light">
-    <!-- TOPBAR -->
-    <div class="topbar py-2 text-white bg-dark small">
+  <style>
+    .topbar-logo {
+      height: 40px;
+      width: auto;
+    }
+
+    .card-hover-effect {
+      transition:
+        transform 0.2s,
+        box-shadow 0.2s;
+      cursor: pointer;
+    }
+    .card-hover-effect:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 0.5rem 1.5rem rgba(0, 0, 0, 0.1) !important;
+    }
+  </style>
+
+  <body>
+    <div class="topbar py-2" style="background-color: #002d62; color: white">
       <div class="container">
-        <div class="d-flex justify-content-between">
-          <span>DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG</span>
-          <span>Bidang Pembinaan Tenaga Kependidikan</span>
+        <div
+          class="d-flex justify-content-between align-items-center flex-wrap gap-2"
+        >
+          <div class="d-flex align-items-center gap-3">
+            <div class="d-flex align-items-center gap-2">
+              <img
+                src="assets/images/logo-bontang.png"
+                alt="Logo Bontang"
+                class="topbar-logo"
+              />
+
+              <img
+                src="assets/images/logo-tutwuri.png"
+                alt="Logo Pendidikan"
+                class="topbar-logo"
+              />
+            </div>
+
+            <span class="fw-bold"
+              >DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG</span
+            >
+          </div>
+
+          <div>
+            <span>Bidang Pembinaan Tenaga Kependidikan</span>
+          </div>
         </div>
       </div>
     </div>
 
-    <!-- NAVBAR -->
-    <nav
-      class="navbar navbar-expand-lg navbar-dark bg-primary sticky-top shadow"
-    >
+    <nav class="navbar navbar-expand-lg navbar-dark sticky-top shadow">
       <div class="container">
-        <a class="navbar-brand fw-bold" href="index.php">PTK BONTANG</a>
+        <a class="navbar-brand" href="index.php"> PTK BONTANG </a>
         <button
           class="navbar-toggler"
           type="button"
@@ -44,22 +81,23 @@
         >
           <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="collapse navbar-collapse" id="menu">
           <ul class="navbar-nav ms-auto">
             <li class="nav-item">
-              <a class="nav-link" href="index.php">Beranda</a>
+              <a class="nav-link active" href="index.php"> Beranda </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link active" href="profil.html">Profil</a>
+              <a class="nav-link active" href="profil.html"> Profil </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="struktur.html">Struktur</a>
+              <a class="nav-link" href="struktur.html"> Struktur </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="data_gtk.php">Data GTK</a>
+              <a class="nav-link" href="data_gtk.php"> Data GTK </a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="kontak.php">Kontak</a>
+              <a class="nav-link" href="kontak.php"> Kontak </a>
             </li>
           </ul>
         </div>
@@ -264,10 +302,8 @@
                 >
               </li>
               <li class="mb-2">
-                <a
-                  href="layanan.html"
-                  class="text-secondary text-decoration-none"
-                  >Layanan</a
+                <a href="kontak.php" class="text-secondary text-decoration-none"
+                  >Kontak</a
                 >
               </li>
             </ul>
