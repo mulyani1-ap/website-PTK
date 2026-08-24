@@ -1,6 +1,16 @@
 <?php
 include "config/database.php";
 
+// Ambil semua data PTK (Guru, Kepsek, Pengawas, Tendik) yang akan pensiun 30 hari ke depan
+// Asumsi standar usia pensiun 60 tahun untuk semua jabatan (bisa disesuaikan jika tendik 58 tahun)
+$query_notif_pensiun = mysqli_query($conn, "
+    SELECT nama, jabatan, sekolah_asal, tanggal_lahir, 
+    DATE_ADD(tanggal_lahir, INTERVAL 60 YEAR) AS tanggal_pensiun 
+    FROM `ptk` 
+    WHERE `tanggal_lahir` IS NOT NULL AND `tanggal_lahir` != '0000-00-00'
+    AND DATEDIFF(DATE_ADD(tanggal_lahir, INTERVAL 60 YEAR), CURDATE()) BETWEEN 1 AND 30
+    ORDER BY tanggal_pensiun ASC
+");
 $jenjang = isset($_GET['jenjang']) ? mysqli_real_escape_string($conn, $_GET['jenjang']) : '';
 $status  = isset($_GET['status']) ? mysqli_real_escape_string($conn, $_GET['status']) : '';
 

@@ -140,7 +140,6 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
     /// SAMBUTAN PAK KABID 
     <section class="container py-5">
       <div class="sambutan-modern">
-        <div class="row align-items-center">
           <div class="col-lg-4 text-center">
             <img src="https://beritakaltim.co/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-23-at-09.58.29-e1776919254989.jpeg" class="kepala-img">
           </div>

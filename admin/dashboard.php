@@ -1,11 +1,20 @@
 <?php
-// Menghubungkan ke database dengan naik 1 folder ke folder induk
 include "../config/database.php";
 
-// Menentukan tab/halaman aktif di dashboard (Default: 'home')
+
+$query_notif_pensiun = mysqli_query($conn, "
+    SELECT nama, jabatan, sekolah_asal, tanggal_lahir, 
+    DATE_ADD(tanggal_lahir, INTERVAL 60 YEAR) AS tanggal_pensiun 
+    FROM `ptk` 
+    WHERE `tanggal_lahir` IS NOT NULL AND `tanggal_lahir` != '0000-00-00'
+    AND DATEDIFF(DATE_ADD(tanggal_lahir, INTERVAL 60 YEAR), CURDATE()) BETWEEN 1 AND 30
+    ORDER BY tanggal_pensiun ASC
+");
+
 $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 $alert_sukses = "";
 $alert_gagal = "";
+
 
 // 1. AJAX Handler: Menandai pesan telah dibaca tanpa refresh halaman
 if (isset($_GET['action']) && $_GET['action'] == 'mark_read' && isset($_GET['id'])) {
@@ -35,13 +44,12 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 3. STATISTIK UTAMA: Hitung total data langsung dari tabel ptk & pendukungnya
 $count_gtk = 0;
 $count_berita = 0;
 $count_agenda = 0;
 $count_pesan = 0;
 
-// Hitung total Guru & Staff dari tabel 'ptk' asli
+
 try {
     $q_ptk = mysqli_query($conn, "SELECT COUNT(*) as total FROM `ptk`");
     if ($q_ptk) $count_gtk = mysqli_fetch_assoc($q_ptk)['total'];
@@ -58,8 +66,7 @@ try {
     $q_agenda = mysqli_query($conn, "SELECT COUNT(*) as total FROM agenda");
     if ($q_agenda) $count_agenda = mysqli_fetch_assoc($q_agenda)['total'];
 } catch (Exception $e) {}
-
-// Hitung total pesan masuk (Hanya yang belum dibaca / is_read = 0)
+ 
 try {
     // Jalankan auto-migration: Cek & tambah kolom is_read jika belum ada
     $check_col = mysqli_query($conn, "SHOW COLUMNS FROM `pesan_masuk` LIKE 'is_read'");
@@ -218,6 +225,25 @@ try {
             </button>
             <span class="fw-bold text-primary">ADMIN PANEL</span>
         </div>
+
+        <?php if ($query_notif_pensiun && mysqli_num_rows($query_notif_pensiun) > 0): ?>
+    <?php while ($pensiun = mysqli_fetch_assoc($query_notif_pensiun)) : ?>
+        <div class="alert alert-warning alert-dismissible fade show shadow-sm rounded-3 mb-3 border-start border-warning border-4" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-4 me-3"></i>
+                <div>
+                    <strong>Peringatan Pensiun!</strong> 
+                    <span class="badge bg-secondary ms-1"><?= htmlspecialchars($pensiun['jabatan']); ?></span> 
+                    <strong><?= htmlspecialchars($pensiun['nama']); ?></strong> 
+                    (<?= htmlspecialchars($pensiun['sekolah_asal']); ?>) akan memasuki masa pensiun pada 
+                    <strong><?= date('d-m-Y', strtotime($pensiun['tanggal_pensiun'])); ?></strong> 
+                    (tinggal 1 bulan lagi).
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endwhile; ?>
+<?php endif; ?>
 
         <!-- Banner Notifikasi Status Tindakan -->
         <?php if (!empty($alert_sukses)) : ?>
@@ -435,6 +461,26 @@ try {
             </div>
         <?php endif; ?>
     </div>
+
+    <!-- Bagian untuk Menampilkan Notifikasi Pensiun -->
+<?php if (isset($query_notif_pensiun) && mysqli_num_rows($query_notif_pensiun) > 0): ?>
+    <?php while ($pensiun = mysqli_fetch_assoc($query_notif_pensiun)) : ?>
+        <div class="alert alert-warning alert-dismissible fade show shadow-sm rounded-4 mb-4 border-start border-warning border-4 bg-white" role="alert">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-exclamation-triangle-fill text-warning fs-3 me-3"></i>
+                <div>
+                    <strong class="text-dark">Peringatan Batas Usia Pensiun!</strong> 
+                    <span class="badge bg-secondary ms-1"><?= htmlspecialchars($pensiun['jabatan']); ?></span> 
+                    <strong class="text-dark"><?= htmlspecialchars($pensiun['nama']); ?></strong> 
+                    (<?= htmlspecialchars($pensiun['sekolah_asal']); ?>) akan memasuki masa pensiun pada 
+                    <strong class="text-danger"><?= date('d-m-Y', strtotime($pensiun['tanggal_pensiun'])); ?></strong> 
+                    (tinggal 1 bulan lagi).
+                </div>
+            </div>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    <?php endwhile; ?>
+<?php endif; ?>
 
     <!-- Bootstrap Modal Detail Pesan Masuk -->
     <div class="modal fade" id="modalDetailPesan" tabindex="-1" aria-labelledby="modalDetailLabel" aria-hidden="true">

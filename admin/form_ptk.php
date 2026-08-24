@@ -13,8 +13,9 @@ $table_used = 'ptk'; // Dipatok langsung ke tabel aslimu
 $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : '';
 $nama = "";
 $nip = "";
+$tanggal_lahir = "";
 $jabatan = "";
-$detail_jabatan = ""; // TAMBAH INI
+$detail_jabatan = ""; 
 $sekolah_asal = "";
 $alert_gagal = "";
 $alert_sukses = "";
@@ -26,8 +27,9 @@ if (!empty($id)) {
         $data_edit = mysqli_fetch_assoc($q_fetch);
         $nama = $data_edit['nama'] ?? '';
         $nip = $data_edit['nip'] ?? '';
+        $tanggal_lahir = $data_edit['tanggal_lahir'] ?? '';
         $jabatan = $data_edit['jabatan'] ?? '';
-        $detail_jabatan = $data_edit['detail_jabatan'] ?? ''; // TAMBAH INI
+        $detail_jabatan = $data_edit['detail_jabatan'] ?? ''; 
         $sekolah_asal = $data_edit['sekolah_asal'] ?? '';
     }
 }
@@ -37,8 +39,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_post = mysqli_real_escape_string($conn, $_POST['id']);
     $nama_post = mysqli_real_escape_string($conn, $_POST['nama']);
     $nip_post = mysqli_real_escape_string($conn, $_POST['nip']);
+    $tanggal_lahir = mysqli_real_escape_string($conn, $_POST['tanggal_lahir']);
     $jabatan_post = mysqli_real_escape_string($conn, $_POST['jabatan']);
-    $detail_jabatan_post = mysqli_real_escape_string($conn, $_POST['detail_jabatan']); // TAMBAH INI
+    $detail_jabatan_post = mysqli_real_escape_string($conn, $_POST['detail_jabatan']); 
     $sekolah_post = mysqli_real_escape_string($conn, $_POST['sekolah_asal']);
 
     if (!empty($id_post)) {
@@ -46,14 +49,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $sql = "UPDATE `$table_used` SET 
                     `nama` = '$nama_post',
                     `nip` = '$nip_post',
+                    `tanggal_lahir` = '$tanggal_lahir_post',
                     `jabatan` = '$jabatan_post',
                     `detail_jabatan` = '$detail_jabatan_post', 
                     `sekolah_asal` = '$sekolah_post'
                 WHERE id = '$id_post'";
     } else {
-        // Mode INSERT: Tambahkan detail_jabatan
-        $sql = "INSERT INTO `$table_used` (`nama`, `nip`, `jabatan`, `detail_jabatan`, `sekolah_asal`) 
-                VALUES ('$nama_post', '$nip_post', '$jabatan_post', '$detail_jabatan_post', '$sekolah_post')";
+        // Mode INSERT:
+        $sql = "INSERT INTO `$table_used` (`nama`, `nip`, `tanggal_lahir`, `jabatan`, `detail_jabatan`, `sekolah_asal`) 
+                VALUES ('$nama_post', '$nip_post', '$tanggal_lahir_post', '$jabatan_post', '$detail_jabatan_post', '$sekolah_post')";
     }
 
     if (mysqli_query($conn, $sql)) {
@@ -237,6 +241,12 @@ try {
                         <input type="text" name="nip" class="form-control rounded-3" placeholder="Masukkan 18 digit NIP atau tulis '-' jika non-PNS" value="<?= htmlspecialchars($nip); ?>">
                     </div>
 
+                    <!-- Input Tanggal Lahir -->
+<div class="mb-3">
+    <label for="tanggal_lahir" class="form-label fw-semibold">Tanggal Lahir</label>
+    <input type="date" class="form-control rounded-3" id="tanggal_lahir" name="tanggal_lahir" value="<?= $tanggal_lahir ?? ''; ?>">
+</div>
+
                    <!-- Input Jabatan -->
 <div class="col-md-6">
     <label class="form-label small fw-bold text-secondary">Jabatan</label>
@@ -245,14 +255,11 @@ try {
         <option value="Guru" <?= $jabatan == 'Guru' ? 'selected' : ''; ?>>Guru</option>
         <option value="Kepala Sekolah" <?= $jabatan == 'Kepala Sekolah' ? 'selected' : ''; ?>>Kepala Sekolah</option>
         <option value="Pengawas" <?= $jabatan == 'Pengawas' ? 'selected' : ''; ?>>Pengawas</option>
-        
-        <!-- INI YANG DIUBAH JADI TENAGA KEPENDIDIKAN -->
-        <!-- Kondisi OR ditambahkan jaga-jaga kalau data lama di database masih tertulis 'Tenaga Administrasi' -->
         <option value="Tenaga Kependidikan" <?= ($jabatan == 'Tenaga Kependidikan' || $jabatan == 'Tenaga Administrasi') ? 'selected' : ''; ?>>Tenaga Kependidikan</option>
     </select>
 </div>
 
-<!-- Input Detail Jabatan (KOLOM BARU) -->
+<!-- Input Detail Jabatan -->
 <div class="col-md-6">
     <label class="form-label small fw-bold text-secondary">Rincian Jabatan (Khusus Tendik)</label>
     <input type="text" name="detail_jabatan" class="form-control rounded-3" placeholder="Contoh: Pesuruh, Tukang Kebun, Satpam..." value="<?= htmlspecialchars($detail_jabatan); ?>">

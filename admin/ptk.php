@@ -313,7 +313,7 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fitur klik toggle sidebar untuk perangkat seluler/mobile
+
         const sidebarCollapse = document.getElementById('sidebarCollapse');
         if(sidebarCollapse) {
             sidebarCollapse.addEventListener('click', function () {
