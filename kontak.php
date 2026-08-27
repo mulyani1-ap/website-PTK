@@ -6,14 +6,13 @@ $pesan_sukses = "";
 $pesan_error = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Ambil data dari formulir secara aman
+    // Ambil data dari formulir 
     $nama = isset($_POST['nama']) ? htmlspecialchars(trim($_POST['nama'])) : '';
     $email = isset($_POST['email']) ? htmlspecialchars(trim($_POST['email'])) : '';
     $subjek = isset($_POST['subjek']) ? htmlspecialchars(trim($_POST['subjek'])) : '';
     $isi_pesan = isset($_POST['pesan']) ? htmlspecialchars(trim($_POST['pesan'])) : '';
 
     if (!empty($nama) && !empty($isi_pesan)) {
-        // Masukkan data pesan ke tabel database 'pesan_masuk'
         $simpan = mysqli_query($conn, "INSERT INTO pesan_masuk (nama, email, subjek, pesan) VALUES ('$nama', '$email', '$subjek', '$isi_pesan')");
         
         if ($simpan) {
@@ -155,7 +154,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
                     <!-- Integrasi Tombol Cepat WhatsApp -->
                     <h6 class="fw-bold text-dark mb-2">Layanan Respons Cepat:</h6>
-                    <a href="https://wa.me/6282195130786" target="_blank" class="btn btn-success rounded-3 w-100 py-2 fw-bold">
+                    <a href="https://wa.me/6282195130786?text=Halo%20Admin,%20Saya%20ingin%20bertanya%20terkait%20data%20GTK%20Bontang." target="_blank" class="btn btn-success rounded-3 w-100 py-2 fw-bold">
                         <i class="bi bi-whatsapp me-2"></i> Hubungi via WhatsApp Chat 
                     </a>
                 </div>

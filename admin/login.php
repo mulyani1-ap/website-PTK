@@ -6,11 +6,9 @@ if(isset($_POST['login']))
 {
     $username = $_POST['username'];
     $password = $_POST['password'];
-
-    // BYPASS TOTAL: Langsung berikan akses tanpa menyentuh database
     if($username == 'admin1' && $password == 'admin')
     {
-        // Kita buat data pelengkap session secara manual agar aplikasi tidak crash
+        //buat data pelengkap session secara manual biar web ga crash
         $_SESSION['admin'] = [
             'id' => 1,
             'username' => 'admin1',

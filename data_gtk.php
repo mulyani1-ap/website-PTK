@@ -1,8 +1,6 @@
 <?php
 include "config/database.php";
 
-// Ambil semua data PTK (Guru, Kepsek, Pengawas, Tendik) yang akan pensiun 30 hari ke depan
-// Asumsi standar usia pensiun 60 tahun untuk semua jabatan (bisa disesuaikan jika tendik 58 tahun)
 $query_notif_pensiun = mysqli_query($conn, "
     SELECT nama, jabatan, sekolah_asal, tanggal_lahir, 
     DATE_ADD(tanggal_lahir, INTERVAL 60 YEAR) AS tanggal_pensiun 
@@ -27,7 +25,6 @@ $negeri_keywords = "(`sekolah_asal` LIKE '%Negeri%'
     OR `sekolah_asal` LIKE '% N %' 
     OR `sekolah_asal` LIKE '% N.%')";
 
-// Daftar kata kunci untuk Non-Formal / PAUD (KB, PKBM, SKB, SPS, TPA)
 $non_formal_keywords = "(`sekolah_asal` LIKE '%KB%' 
     OR `sekolah_asal` LIKE '%PKBM%' 
     OR `sekolah_asal` LIKE '%SKB%' 
@@ -42,7 +39,7 @@ if (!empty($status)) {
         // Swasta selain kategori negeri dan non-formal di atas
         $filter_sql = " AND NOT " . $negeri_keywords . "AND NOT " . $non_formal_keywords;
     } elseif ($status == 'Non-Formal') {
-        // Khusus memunculkan KB, PKBM, SKB, SPS, TPA
+        //memunculkan KB, PKBM, SKB, SPS, TPA
         $filter_sql = " AND " . $non_formal_keywords;
     }
 }
@@ -56,7 +53,6 @@ $data_kepsek = mysqli_fetch_assoc($query_kepsek)['total'] ?? 0;
 $query_pengawas = mysqli_query($conn, "SELECT COUNT(*) AS total FROM `ptk` WHERE `jabatan`='Pengawas' $filter_sql");
 $data_pengawas = mysqli_fetch_assoc($query_pengawas)['total'] ?? 0;
 
-// Hitung total Tenaga Kependidikan / Administrasi dari database
 $query_admin = mysqli_query($conn, "SELECT COUNT(*) as total FROM `ptk` WHERE `jabatan` = 'Tenaga Kependidikan' OR `jabatan` = 'Tenaga Administria' OR `jabatan` LIKE '%Kependidikan%' OR `jabatan` LIKE '%Administrasi%'");
 $row_admin = mysqli_fetch_assoc($query_admin);
 $data_admin = $row_admin['total'];
@@ -90,7 +86,7 @@ $data_admin = $row_admin['total'];
             </div>
             <span class="fw-bold">DINAS PENDIDIKAN DAN KEBUDAYAAN KOTA BONTANG</span>
           </div>
-          <div><span>Bidang Pembinaan Tenaga Kependidikan</span></div>
+          <div><span>Bidang Pembinaan Ketenagaan</span></div>
         </div>
       </div>
     </div>
@@ -190,12 +186,10 @@ $data_admin = $row_admin['total'];
             <div class="col-6 col-lg-3">
 
             
-              <!-- Perhatikan bagian ini: data-kategori = "Tenaga Administrasi", data-judul = "Tenaga Kependidikan" -->
               <div class="card border-0 shadow-sm rounded-4 p-3 bg-white card-clickable" 
                    data-bs-toggle="modal" data-bs-target="#modalDetail" data-kategori="Tenaga Administrasi" data-judul="Tenaga Kependidikan">
                 <div class="mb-2" style="color: #6f42c1"><i class="bi bi-file-earmark-text fs-2"></i></div>
                 <h3 class="fw-bold text-dark mb-1"><?= number_format($data_admin, 0, ',', '.'); ?></h3>
-                <!-- Tampilan diubah jadi Tenaga Kependidikan -->
                 <span class="text-muted small fw-medium">Tenaga Kependidikan</span> 
               </div>
             </div>
@@ -260,12 +254,11 @@ $data_admin = $row_admin['total'];
                     <th style="width: 5%">No</th>
                     <th>Nama Personnel</th>
                     <th>NIP / ID</th>
-                    <th>Jenis Jabatan</th> <!-- Header baru -->
+                    <th>Jenis Jabatan</th> 
                     <th>Instansi / Sekolah</th>
                   </tr>
                 </thead>
                 <tbody id="tempat-data-detail">
-                  <!-- Colspan diubah jadi 5 -->
                   <tr><td colspan="5" class="text-center text-muted py-4">Memuat data...</td></tr> 
                 </tbody>
               </table>
@@ -277,7 +270,7 @@ $data_admin = $row_admin['total'];
 
     <footer class="bg-dark text-white pt-4 pb-3 mt-5">
       <div class="container text-center text-secondary small">
-        © 2026 Bidang Pembinaan Tenaga Kependidikan Kota Bontang
+        © 2026 Bidang Pembinaan Ketenagaan, Dinas Pendidikan dan Kebudayaan Kota Bontang
       </div>
     </footer>
 
@@ -298,7 +291,6 @@ $data_admin = $row_admin['total'];
           // Ambil judul untuk ditampilkan di UI
           const judul = card.getAttribute('data-judul'); 
           
-          // Set Judul Modalnya sesuai data-judul
           modalDetail.querySelector('.modal-title').textContent = 'Detail Data Personnel - ' + judul;
           
           const tabelBody = document.getElementById('tempat-data-detail');
@@ -341,7 +333,6 @@ $data_admin = $row_admin['total'];
       currentChart = new Chart(ctx, {
         type: 'bar',
         data: {
-          // Label di grafik diubah menjadi Tenaga Kependidikan
           labels: ['Guru', 'Kepala Sekolah', 'Pengawas', 'Tenaga Kependidikan'],
           datasets: [{
             label: 'Jumlah Personnel',

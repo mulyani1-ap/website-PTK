@@ -1,12 +1,11 @@
 <?php
-// 1. Koneksi ke Database
 $koneksi = mysqli_connect("localhost", "root", "", "ptk_bontang");
 
 if (!$koneksi) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
-// 2. Ambil data dari tabel pengumuman untuk ditampilkan ke pengunjung
+//ambil data dari tabel pengumuman untuk ditampilkan ke pengunjung
 $query = mysqli_query($koneksi, "SELECT * FROM pengumuman ORDER BY id DESC"); 
 ?>
 

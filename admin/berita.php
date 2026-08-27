@@ -1,15 +1,13 @@
 <?php
-// Menghubungkan ke database dengan naik 1 folder ke folder induk
 include "../config/database.php";
 
 $alert_sukses = "";
 $alert_gagal = "";
 
-// 1. Logika Hapus Berita beserta file thumbnail-nya jika ada
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_berita = intval($_GET['id']);
     try {
-        // Ambil info thumbnail dulu untuk dihapus dari folder upload
+        // Ambil info thumbnail buat dihapus dari folder upload
         $cari_gbr = mysqli_query($conn, "SELECT thumbnail FROM berita WHERE id = '$id_berita'");
         if ($cari_gbr && mysqli_num_rows($cari_gbr) > 0) {
             $data_gbr = mysqli_fetch_assoc($cari_gbr);
@@ -30,10 +28,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 2. Ambil total pesan masuk untuk badge notifikasi sidebar (Hanya yang belum dibaca)
 $count_pesan = 0;
 try {
-    // Auto-migration: Cek & tambah kolom is_read jika belum ada
+    // Auto-migration
     $check_col = mysqli_query($conn, "SHOW COLUMNS FROM `pesan_masuk` LIKE 'is_read'");
     if ($check_col && mysqli_num_rows($check_col) == 0) {
         mysqli_query($conn, "ALTER TABLE `pesan_masuk` ADD COLUMN `is_read` TINYINT(1) DEFAULT 0 AFTER `pesan`");
@@ -43,7 +40,7 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 3. Ambil semua data berita dari database
+
 $ambil_berita = false;
 try {
     $ambil_berita = mysqli_query($conn, "SELECT * FROM berita ORDER BY id DESC");
@@ -251,7 +248,7 @@ try {
                                         <a href="edit_berita.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-warning rounded-3" title="Edit Berita">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <!-- Tombol Pemicu Modal Hapus -->
+                                        <!-- Modal Hapus -->
                                         <button type="button" class="btn btn-sm btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#modalHapusBerita<?= $row['id']; ?>" title="Hapus Permanen">
                                             <i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -259,7 +256,7 @@ try {
                                 </td>
                             </tr>
 
-                            <!-- Bootstrap Modal Konfirmasi Hapus Berita -->
+                            <!-- Konfirmasi Hapus Berita -->
                             <div class="modal fade" id="modalHapusBerita<?= $row['id']; ?>" tabindex="-1" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content border-0 rounded-4 shadow">
@@ -292,7 +289,6 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fitur klik toggle sidebar untuk perangkat seluler/mobile
         const sidebarCollapse = document.getElementById('sidebarCollapse');
         if(sidebarCollapse) {
             sidebarCollapse.addEventListener('click', function () {

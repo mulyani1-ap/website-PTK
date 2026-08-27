@@ -1,15 +1,14 @@
 <?php
-// 1. Koneksi ke Database (Sesuaikan nama database kamu, di sini contohnya ptk_bontang)
 $koneksi = mysqli_connect("localhost", "root", "", "ptk_bontang");
 
 if (!$koneksi) {
     die("Koneksi gagal: " . mysqli_connect_error());
 }
 
-// 2. Ambil parameter fitur dari URL (default ke nuptk)
+//ambil parameter fitur dari URL (default ke nuptk)
 $fitur = isset($_GET['fitur']) ? $_GET['fitur'] : 'nuptk';
 
-// 3. Atur Judul, Icon, dan Teks Tombol Tambah sesuai tombol yang diklik
+//atur judul, icon, dan teks tombol tambah sesuai tombol yang diklik
 switch ($fitur) {
     case 'nuptk':
         $judul = "Data NUPTK";
@@ -28,7 +27,6 @@ switch ($fitur) {
     case 'unduhan':
         $judul = "Data Unduhan Berkas";
         $icon = "bi-download text-danger";
-        // Mengubah teks tombol atas khusus untuk fitur unduhan berkas
         $teks_tambah = "Upload File Baru"; 
         $query = mysqli_query($koneksi, "SELECT * FROM pengumuman ORDER BY id DESC"); 
         break;

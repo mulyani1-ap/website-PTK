@@ -1,10 +1,9 @@
 <?php
 include "config/database.php";
 
-// Ambil ID dari URL
 if (isset($_GET['id'])) {
     $id = mysqli_real_escape_string($conn, $_GET['id']);
-    // Ambil data agenda spesifik berdasarkan ID
+
     $query = mysqli_query($conn, "SELECT * FROM agenda WHERE id = '$id'");
     $agenda = mysqli_fetch_assoc($query);
 

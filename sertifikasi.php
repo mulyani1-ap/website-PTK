@@ -1,11 +1,10 @@
 <?php
-// 1. Hubungkan ke database
 include "config/database.php";
 
-// 2. Ambil kata kunci pencarian dari user (jika ada)
+//ambil kata kunci pencarian dari user (kalau ada)
 $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['search']) : '';
 
-// 3. Query pencarian status sertifikasi dengan sistem Auto-Query Fallback (Anti-Crash Kolom)
+//query pencarian status sertifikasi dengan sistem Auto-Query Fallback (Anti-Crash Kolom)
 $query_sertifikasi = false;
 
 if (!empty($keyword)) {

@@ -138,7 +138,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
     </section>
 
     /// SAMBUTAN PAK KABID 
-    <section class="container py-5">
+    <section class="container py-3">
       <div class="sambutan-modern">
           <div class="col-lg-4 text-center">
             <img src="https://beritakaltim.co/wp-content/uploads/2026/04/WhatsApp-Image-2026-04-23-at-09.58.29-e1776919254989.jpeg" class="kepala-img">
@@ -207,7 +207,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
       </div>
     </section>
 
-  
+  <!-- terkait bidang ---> 
     <section class="py-5">
       <div class="container">
         <div class="row align-items-center">
@@ -241,7 +241,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           <h2 class="section-title">Berita Terbaru</h2>
         </div>
 
-        <!-- Tambahan Fitur Search Bar Berita -->
+        <!-- Search Bar Berita -->
         <div class="row justify-content-center mb-5">
           <div class="col-md-6">
             <form action="index.php#section-berita" method="GET" class="d-flex shadow-sm rounded-pill bg-light p-1 border">
@@ -259,10 +259,9 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </div>
         </div>
 
-        <!-- Menerapkan Horizontal Scroll di Sini -->
+        <!-- horizontal scroll -->
         <div class="scroll-horizontal py-2">
           <?php
-          // Query bersyarat berdasarkan keyword pencarian (Limit dinaikkan jadi 10 agar bisa di-scroll panjang)
           if (!empty($keyword)) {
               $berita = mysqli_query($conn, "SELECT * FROM berita WHERE status='publish' AND (judul LIKE '%$keyword%' OR ringkasan LIKE '%$keyword%') ORDER BY id DESC LIMIT 10");
           } else {
@@ -272,7 +271,6 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           if(mysqli_num_rows($berita) > 0) {
               while($row = mysqli_fetch_assoc($berita)):
           ?>
-            <!-- Pembungkus col-lg-4 dihapus agar card bisa sejajar memanjang -->
             <div class="card news-card h-100 shadow-sm">
               <img src="uploads/berita/<?= $row['thumbnail']; ?>" class="card-img-top" alt="Gambar Berita" style="height:220px;object-fit:cover;" onerror="this.onerror=null; this.src='https://placehold.co/600x400/e0e0e0/666666?text=No+Image';">
               <div class="card-body d-flex flex-column">
@@ -352,7 +350,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
         </div>
       </div>
     </section>
-<!--- AGENDA KEGIATAN --->
+<!--- agenda kegiatan --->
     <section class="py-5 bg-white">
       <div class="container">
         <div class="text-center mb-5">
@@ -395,7 +393,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
             <h5>Menu Cepat</h5>
             <ul class="list-unstyled">
               <li>Profil</li>
-              <li>Struktur Organisasi</li>
+              <li>Struktur </li>
               <li>Data GTK</li>
               <li>Kontak</li>
             </ul>
@@ -407,7 +405,7 @@ $keyword = isset($_GET['search']) ? mysqli_real_escape_string($conn, $_GET['sear
           </div>
         </div>
         <hr>
-        <div class="text-center">© 2026 Bidang Pembinaan Tenaga Kependidikan Kota Bontang</div>
+        <div class="text-center">© 2026 Bidang Pembinaan Ketenagaan, Dinas Pendidikan dan Kebudayaan Kota Bontang</div>
       </div>
     </footer >
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>

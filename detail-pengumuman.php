@@ -1,15 +1,15 @@
 <?php
 include "config/database.php";
 
-// Mengambil ID dari URL (misal: ?id=2)
+// ngambil ID dari URL (misal: ?id=2)
 if (isset($_GET['id'])) {
     $id = mysqli_real_escape_string($conn, $_GET['id']);
     
-    // Ambil data pengumuman yang sesuai dengan ID
+    // ambil data pengumuman yang sesuai ID
     $query = mysqli_query($conn, "SELECT * FROM pengumuman WHERE id = '$id'");
     $pengumuman = mysqli_fetch_assoc($query);
     
-    // Kalau ID tidak ditemukan di database, balikkan ke halaman utama
+    // kalau ID tidak ditemukan di database, balik ke halaman utama
     if (!$pengumuman) {
         header("Location: index.php");
         exit;

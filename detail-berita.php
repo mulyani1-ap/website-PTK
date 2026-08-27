@@ -1,11 +1,10 @@
 <?php
-// 1. Hubungkan ke database menggunakan file konfigurasi asli kamu
 include "config/database.php";
 
-// 2. Ambil parameter ID berita secara aman
+// ngambil parameter id berita
 $id = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// 3. Ambil data berita utama
+//ngambil berita utama
 $query = mysqli_query($conn, "SELECT * FROM berita WHERE id='$id'");
 $berita = mysqli_fetch_assoc($query);
 
@@ -29,15 +28,15 @@ if (!$berita) {
             object-fit: cover;
             width: 100%;
         }
-        /* Menyeragamkan ukuran dan aspect ratio gambar serta video */
+        /* menyeragamkan ukuran dan aspek ratio gambar dan vid */
         .media-item img, .media-item video {
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.08);
             transition: transform 0.2s ease;
             width: 100%;
             height: 100%;
-            aspect-ratio: 4/3; /* Memaksa perbandingan ukuran yang seragam */
-            object-fit: cover; /* Memotong konten dengan rapi agar memenuhi kotak */
+            aspect-ratio: 4/3; 
+            object-fit: cover;
         }
         .media-item img:hover, .media-item video:hover {
             transform: scale(1.02);
@@ -47,29 +46,25 @@ if (!$berita) {
 <body class="bg-light">
 
     <div class="container py-5">
-        <!-- Tombol Kembali -->
         <a href="index.php" class="btn btn-outline-secondary mb-4 rounded-3">
             <i class="bi bi-arrow-left"></i> Kembali ke Beranda
         </a>
 
-        <!-- Judul Berita -->
         <h1 class="fw-bold text-dark mb-2"><?= htmlspecialchars($berita['judul']); ?></h1>
         
         <p class="text-muted small mb-4">
             <i class="bi bi-calendar3 me-1"></i> <?= date('d M Y', strtotime($berita['created_at'])); ?>
         </p>
 
-        <!-- Gambar Utama / Cover Berita -->
+        <!-- cover/thumbnail  -->
         <?php if (!empty($berita['thumbnail'])) { ?>
             <img src="uploads/berita/<?= htmlspecialchars($berita['thumbnail']); ?>" class="news-thumbnail rounded shadow-sm mb-4" alt="Thumbnail">
         <?php } ?>
 
-        <!-- Isi Konten Berita -->
         <div class="bg-white p-4 rounded-4 shadow-sm mb-5" style="font-size:18px; line-height:1.8; text-align: justify;">
             <?= nl2br(htmlspecialchars($berita['isi'])); ?>
         </div>
 
-        <!-- Bagian Dokumentasi Media Terkait (Foto / Video dari berita_media) -->
         <div class="bg-white p-4 rounded-4 shadow-sm">
             <h5 class="fw-bold text-dark mb-4"><i class="bi bi-images text-primary me-2"></i>Dokumentasi Terkait:</h5>
             <div class="row g-3">
@@ -81,20 +76,20 @@ if (!$berita) {
                     while ($media = mysqli_fetch_assoc($ambil_media)) {
                         $file_path = $media['file_path'];
                         
-                        // Ambil ekstensi berkas di ujung nama file secara aman
+                        // ngambil ekstensi berkas di ujung nama file secara aman
                         $ext = strtolower(pathinfo($file_path, PATHINFO_EXTENSION));
                         
-                        // Daftar ekstensi gambar dan video
+                        // daftar ekstensi gambar dan video
                         $ekstensi_gambar = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'svg'];
                         $ekstensi_video = ['mp4', 'webm', 'ogg', 'mov', '3gp'];
 
-                        // Cek apakah data merupakan gambar atau video berdasarkan tipe DB atau ekstensi berkas
+                        // pengecekan berdasarkan tipe DB atau ekstensi berkas
                         $is_image = ($media['tipe'] == 'image' || in_array($ext, $ekstensi_gambar));
                         $is_video = ($media['tipe'] == 'video' || in_array($ext, $ekstensi_video));
 
                         if ($is_image) { 
                         ?>
-                            <!-- Tampilan jika berkas berupa FOTO/GAMBAR -->
+                            <!-- tampilan jika berkas berupa gambar -->
                             <div class="col-md-4 col-sm-6 media-item">
                                 <a href="uploads/berita/<?= htmlspecialchars($file_path); ?>" target="_blank">
                                     <img src="uploads/berita/<?= htmlspecialchars($file_path); ?>" class="img-fluid" alt="Dokumentasi Berita">
@@ -103,14 +98,14 @@ if (!$berita) {
                         <?php 
                         } elseif ($is_video) { 
                         ?>
-                            <!-- Tampilan jika berkas berupa VIDEO (Disamakan kolomnya menjadi col-md-4) -->
+                            <!-- tampilan jika berkas berupa vid -->
                             <div class="col-md-4 col-sm-6 media-item">
                                 <video src="uploads/berita/<?= htmlspecialchars($file_path); ?>" controls></video>
                             </div>
                         <?php 
                         } else { 
                         ?>
-                            <!-- Tampilan jika berkas berupa dokumen lain (PDF, Word, dll) -->
+                            <!-- tampilan jika berkas berupa dokumen lain (PDF, Word, dll) -->
                             <div class="col-md-4 col-sm-6">
                                 <div class="alert alert-secondary d-flex align-items-center rounded-3 p-3 mb-0" role="alert" style="height: 100%;">
                                     <i class="bi bi-file-earmark-arrow-down fs-3 me-2 text-primary"></i>

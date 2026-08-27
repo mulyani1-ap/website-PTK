@@ -7,11 +7,9 @@ if(!isset($_SESSION['admin'])){
 }
 
 include "../config/database.php";
-
-// Ambil ID dari URL
 $id_berita = isset($_GET['id']) ? intval($_GET['id']) : 0;
 
-// Tarik data berita yang mau diedit
+// narik data berita yang mau diedit
 $query = mysqli_query($conn, "SELECT * FROM berita WHERE id = '$id_berita'");
 if(mysqli_num_rows($query) == 0) {
     echo "<script>alert('Data tidak ditemukan!'); window.location='berita.php';</script>";
@@ -30,22 +28,20 @@ if(isset($_POST['update']))
 
     $slug = strtolower(str_replace(' ', '-', $judul));
 
-    // 1. Cek apakah admin mengunggah thumbnail baru
     $query_update_thumb = ""; 
     if(!empty($_FILES['thumbnail']['name'])) {
         $thumbnail = $_FILES['thumbnail'];
         $namaFile = time() ."_". str_replace(' ', '_', $thumbnail['name']);
         
         if(move_uploaded_file($thumbnail['tmp_name'], "../uploads/berita/" .$namaFile)) {
-            // Hapus thumbnail lama dari folder jika ada
             if(!empty($data['thumbnail']) && file_exists("../uploads/berita/" . $data['thumbnail'])) {
                 unlink("../uploads/berita/" . $data['thumbnail']);
             }
-            $query_update_thumb = ", thumbnail = '$namaFile'"; // Tambahkan ke query update
+            $query_update_thumb = ", thumbnail = '$namaFile'"; 
         }
     }
 
-    // 2. Update Berita Utama ke Database
+    // up berita utama ke base
     mysqli_query($conn, "UPDATE berita SET 
         judul = '$judul', 
         slug = '$slug', 
@@ -57,7 +53,7 @@ if(isset($_POST['update']))
         WHERE id = '$id_berita'
     ");
 
-    // 3. Proses Tambah Multi-upload Media & Dokumen (Tabel berita_media)
+    // Tambah Multi-upload Media & Dokum 
     if (!empty($_FILES['berita_media']['name'][0])) {
         $total_files = count($_FILES['berita_media']['name']);
         
@@ -68,7 +64,7 @@ if(isset($_POST['update']))
             
             $nama_media_baru = time() . "_" . $i . "_" . str_replace(' ', '_', $nama_media);
             
-            // Deteksi otomatis apakah file berupa video, file dokumen, atau gambar
+            // Deteksi otomatis file video, dokumen, atau gambar
             if (strpos($type_media, 'video') !== false) {
                 $tipe_media = 'video';
             } elseif (strpos($type_media, 'application') !== false || strpos($type_media, 'text') !== false) {
@@ -133,7 +129,7 @@ if(isset($_POST['update']))
                 </div>
                 
                 <div class="col-md-6 mb-3">
-                    <label class="form-label fw-semibold">URL Video YouTube</label>
+                    <label class="form-label fw-semibold">url YouTube</label>
                     <input type="text" name="youtube_url" class="form-control" value="<?= htmlspecialchars($data['youtube_url'] ?? ''); ?>">
                 </div>
             </div>
@@ -155,7 +151,6 @@ if(isset($_POST['update']))
 
                 <div class="col-md-7 mb-4">
                     <label class="form-label fw-semibold">Tambah Lampiran Baru (Multi-Upload)</label>
-                    <!-- Ini yang bikin kamu bisa upload file dokumen saat edit -->
                     <input type="file" name="berita_media[]" class="form-control" accept="image/*,video/*,.pdf,.doc,.docx,.xls,.xlsx" multiple>
                     <small class="text-muted">Tahan <kbd>Ctrl</kbd> untuk memilih lebih dari 1 file sekaligus (Gambar, Video, PDF, Word, dll). File ini akan ditambahkan ke lampiran yang sudah ada.</small>
                 </div>

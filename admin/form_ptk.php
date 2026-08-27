@@ -8,7 +8,7 @@ if(!isset($_SESSION['admin'])){
 
 include "../config/database.php";
 
-$table_used = 'ptk'; // Dipatok langsung ke tabel aslimu
+$table_used = 'ptk'; 
 
 $id = isset($_GET['id']) ? mysqli_real_escape_string($conn, $_GET['id']) : '';
 $nama = "";
@@ -20,7 +20,7 @@ $sekolah_asal = "";
 $alert_gagal = "";
 $alert_sukses = "";
 
-// 1. Ambil data lama jika mode EDIT
+// ambil data lama pas edit(ulang)
 if (!empty($id)) {
     $q_fetch = mysqli_query($conn, "SELECT * FROM `$table_used` WHERE id = '$id'");
     if ($q_fetch && mysqli_num_rows($q_fetch) > 0) {
@@ -34,7 +34,7 @@ if (!empty($id)) {
     }
 }
 
-// 2. Proses Simpan / Update Data (POST Handler)
+// penyimpanan data yang udin diupdate
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $id_post = mysqli_real_escape_string($conn, $_POST['id']);
     $nama_post = mysqli_real_escape_string($conn, $_POST['nama']);
@@ -45,7 +45,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $sekolah_post = mysqli_real_escape_string($conn, $_POST['sekolah_asal']);
 
     if (!empty($id_post)) {
-        // Mode UPDATE: Tambahkan detail_jabatan
         $sql = "UPDATE `$table_used` SET 
                     `nama` = '$nama_post',
                     `nip` = '$nip_post',
@@ -55,7 +54,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     `sekolah_asal` = '$sekolah_post'
                 WHERE id = '$id_post'";
     } else {
-        // Mode INSERT:
+        // ni rumus buat up data cepat/banyak lewat database
         $sql = "INSERT INTO `$table_used` (`nama`, `nip`, `tanggal_lahir`, `jabatan`, `detail_jabatan`, `sekolah_asal`) 
                 VALUES ('$nama_post', '$nip_post', '$tanggal_lahir_post', '$jabatan_post', '$detail_jabatan_post', '$sekolah_post')";
     }
@@ -68,7 +67,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// 3. Ambil total pesan masuk untuk badge notifikasi sidebar
+// ngambil pesan masuk untuk side bar
 $count_pesan = 0;
 try {
     $q_pesan = mysqli_query($conn, "SELECT COUNT(*) as total FROM pesan_masuk WHERE is_read = 0");
@@ -147,7 +146,7 @@ try {
 </head>
 <body>
 
-    <!-- Sidebar Menu Admin Gelap Premium -->
+    <!-- side bar admin -->
     <div class="sidebar d-flex flex-column p-0 shadow">
         <div class="p-4 border-bottom border-secondary text-center">
             <h5 class="fw-bold text-warning mb-0"><i class="bi bi-shield-lock-fill me-2"></i>ADMIN PANEL</h5>
@@ -195,14 +194,13 @@ try {
                 <i class="bi bi-house-door me-1"></i> Lihat Beranda Utama
             </a>
             <a href="logout.php" class="btn btn-danger w-100 btn-sm rounded-3 mt-2">
-                <i class="bi bi-box-arrow-right me-1"></i> Keluar / Logout
+                <i class="bi bi-box-arrow-right me-1"></i> Keluar
             </a>
         </div>
     </div>
 
-    <!-- Konten Utama Halaman Form -->
+    <!-- halaman utama -->
     <div class="main-content">
-        <!-- Topbar Mobile Toggle -->
         <div class="d-lg-none d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
             <button class="btn btn-primary" id="sidebarCollapse">
                 <i class="bi bi-list"></i> Menu Panel
@@ -210,7 +208,7 @@ try {
             <span class="fw-bold text-primary">ADMIN PANEL</span>
         </div>
 
-        <!-- Banner Notifikasi Gagal Simpan -->
+        <!-- banner notif 'gagal tersimpan' -->
         <?php if (!empty($alert_gagal)) : ?>
             <div class="alert alert-danger alert-dismissible fade show rounded-3 small shadow-sm mb-4" role="alert">
                 <i class="bi bi-exclamation-triangle-fill me-2"></i> <?= $alert_gagal; ?>
@@ -223,31 +221,27 @@ try {
             <p class="text-muted small">Isi rincian formulir di bawah ini untuk menyimpan informasi terbaru guru dan tenaga kependidikan ke database.</p>
         </div>
 
-        <!-- Card Box Formulir Input -->
+        <!-- cars input -->
         <div class="card form-card p-4 bg-white">
             <form action="form_ptk.php<?= !empty($id) ? '?id=' . $id : ''; ?>" method="POST">
                 <div class="row g-3">
                     <input type="hidden" name="id" value="<?= htmlspecialchars($id); ?>">
 
-                    <!-- Input Nama Lengkap -->
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Nama Lengkap</label>
                         <input type="text" name="nama" class="form-control rounded-3" placeholder="Contoh: Siti Aminah, S.Pd" value="<?= htmlspecialchars($nama); ?>" required>
                     </div>
 
-                    <!-- Input NIP -->
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">NIP.</label>
                         <input type="text" name="nip" class="form-control rounded-3" placeholder="Masukkan 18 digit NIP atau tulis '-' jika non-PNS" value="<?= htmlspecialchars($nip); ?>">
                     </div>
 
-                    <!-- Input Tanggal Lahir -->
 <div class="mb-3">
     <label for="tanggal_lahir" class="form-label fw-semibold">Tanggal Lahir</label>
     <input type="date" class="form-control rounded-3" id="tanggal_lahir" name="tanggal_lahir" value="<?= $tanggal_lahir ?? ''; ?>">
 </div>
 
-                   <!-- Input Jabatan -->
 <div class="col-md-6">
     <label class="form-label small fw-bold text-secondary">Jabatan</label>
     <select name="jabatan" class="form-select rounded-3" required>
@@ -259,19 +253,16 @@ try {
     </select>
 </div>
 
-<!-- Input Detail Jabatan -->
 <div class="col-md-6">
     <label class="form-label small fw-bold text-secondary">Rincian Jabatan (Khusus Tendik)</label>
     <input type="text" name="detail_jabatan" class="form-control rounded-3" placeholder="Contoh: Pesuruh, Tukang Kebun, Satpam..." value="<?= htmlspecialchars($detail_jabatan); ?>">
 </div>
 
-                    <!-- Input Nama Sekolah/Instansi -->
                     <div class="col-md-6">
                         <label class="form-label small fw-bold text-secondary">Nama Sekolah / Instansi</label>
                         <input type="text" name="sekolah_asal" class="form-control rounded-3" placeholder="Contoh: SDN 001 Bontang Utara" value="<?= htmlspecialchars($sekolah_asal); ?>" required>
                     </div>
 
-                    <!-- Tombol Aksi Simpan -->
                     <div class="col-12 mt-4 pt-3 border-top d-flex gap-2">
                         <button type="submit" class="btn btn-primary rounded-pill px-4 shadow-sm fw-semibold">
                             <i class="bi bi-save me-1"></i> <?= !empty($id) ? 'Update Data' : 'Simpan Data'; ?>
@@ -283,7 +274,6 @@ try {
         </div>
     </div>
 
-    <!-- Bootstrap Bundle JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         const sidebarCollapse = document.getElementById('sidebarCollapse');

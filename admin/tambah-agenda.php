@@ -12,7 +12,6 @@ if(isset($_POST['simpan'])) {
     $lokasi = mysqli_real_escape_string($conn, $_POST['lokasi']);
     $deskripsi = mysqli_real_escape_string($conn, $_POST['deskripsi']);
 
-    // Query insert disesuaikan dengan struktur tabel agenda kamu
     $query = mysqli_query($conn, "INSERT INTO agenda (judul, tanggal, lokasi, deskripsi) VALUES ('$judul', '$tanggal', '$lokasi', '$deskripsi')");
 
     if($query) {

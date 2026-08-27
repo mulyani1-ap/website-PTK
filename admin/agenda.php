@@ -1,11 +1,9 @@
 <?php
-// Menghubungkan ke database dengan naik 1 folder ke folder induk
 include "../config/database.php";
 
 $alert_sukses = "";
 $alert_gagal = "";
 
-// 1. Logika Hapus Agenda
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_agenda = intval($_GET['id']);
     try {
@@ -20,10 +18,10 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 2. Ambil total pesan masuk untuk badge notifikasi sidebar (Hanya yang belum dibaca)
+// Ambil total pesan masuk untuk badge notifikasi sidebar (yang belum dibaca)
 $count_pesan = 0;
 try {
-    // Auto-migration: Cek & tambah kolom is_read jika belum ada
+    // Cek & tambah kolom is_read jika belum ada
     $check_col = mysqli_query($conn, "SHOW COLUMNS FROM `pesan_masuk` LIKE 'is_read'");
     if ($check_col && mysqli_num_rows($check_col) == 0) {
         mysqli_query($conn, "ALTER TABLE `pesan_masuk` ADD COLUMN `is_read` TINYINT(1) DEFAULT 0 AFTER `pesan`");
@@ -33,7 +31,7 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 3. Ambil semua data agenda dari database
+// data agenda dari database
 $ambil_agenda = false;
 try {
     $ambil_agenda = mysqli_query($conn, "SELECT * FROM agenda ORDER BY tanggal DESC");
@@ -164,7 +162,7 @@ try {
     </div>
 
     <div class="main-content">
-        <!-- Topbar Mobile Toggle -->
+        <!-- Topbar-->
         <div class="d-lg-none d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
             <button class="btn btn-primary" id="sidebarCollapse">
                 <i class="bi bi-list"></i> Menu Panel
@@ -245,7 +243,7 @@ try {
                                 </td>
                             </tr>
 
-                            <!-- Bootstrap Modal Konfirmasi Hapus Agenda -->
+                            <!-- Konfirmasi Hapus Agenda -->
                             <div class="modal fade" id="modalHapusAgenda<?= $row['id']; ?>" tabindex="-1" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content border-0 rounded-4 shadow">
@@ -278,7 +276,6 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fitur klik toggle sidebar untuk perangkat seluler/mobile
         const sidebarCollapse = document.getElementById('sidebarCollapse');
         if(sidebarCollapse) {
             sidebarCollapse.addEventListener('click', function () {

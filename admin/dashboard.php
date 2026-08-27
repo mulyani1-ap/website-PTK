@@ -1,6 +1,5 @@
 <?php
-include "../config/database.php";
-
+include "../config/database.php"; 
 
 $query_notif_pensiun = mysqli_query($conn, "
     SELECT nama, jabatan, sekolah_asal, tanggal_lahir, 
@@ -15,8 +14,6 @@ $page = isset($_GET['page']) ? htmlspecialchars($_GET['page']) : 'home';
 $alert_sukses = "";
 $alert_gagal = "";
 
-
-// 1. AJAX Handler: Menandai pesan telah dibaca tanpa refresh halaman
 if (isset($_GET['action']) && $_GET['action'] == 'mark_read' && isset($_GET['id'])) {
     header('Content-Type: application/json');
     $id_pesan = intval($_GET['id']);
@@ -29,7 +26,7 @@ if (isset($_GET['action']) && $_GET['action'] == 'mark_read' && isset($_GET['id'
     exit;
 }
 
-// 2. Handler Hapus Pesan Masuk
+// Handler Hapus Pesan Masuk
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_pesan = intval($_GET['id']);
     try {
@@ -55,13 +52,11 @@ try {
     if ($q_ptk) $count_gtk = mysqli_fetch_assoc($q_ptk)['total'];
 } catch (Exception $e) {}
 
-// Hitung total berita
 try {
     $q_berita = mysqli_query($conn, "SELECT COUNT(*) as total FROM berita");
     if ($q_berita) $count_berita = mysqli_fetch_assoc($q_berita)['total'];
 } catch (Exception $e) {}
 
-// Hitung total agenda
 try {
     $q_agenda = mysqli_query($conn, "SELECT COUNT(*) as total FROM agenda");
     if ($q_agenda) $count_agenda = mysqli_fetch_assoc($q_agenda)['total'];
@@ -78,7 +73,6 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// Ambil semua pesan masuk terbaru untuk ditampilkan di inbox admin
 $ambil_pesan = false;
 try {
     $ambil_pesan = mysqli_query($conn, "SELECT * FROM pesan_masuk ORDER BY created_at DESC");
@@ -164,7 +158,7 @@ try {
 </head>
 <body>
 
-    <!-- Sidebar Menu Admin Gelap Premium -->
+    <!-- Sidebar Menu Admin-->
     <div class="sidebar d-flex flex-column p-0 shadow">
         <div class="p-4 border-bottom border-secondary text-center">
             <h5 class="fw-bold text-warning mb-0"><i class="bi bi-shield-lock-fill me-2"></i>ADMIN PANEL</h5>
@@ -218,7 +212,7 @@ try {
     </div>
 
     <div class="main-content">
-        <!-- Topbar Mobile Toggle -->
+        <!-- Topbar -->
         <div class="d-lg-none d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
             <button class="btn btn-primary" id="sidebarCollapse">
                 <i class="bi bi-list"></i> Menu Panel
@@ -261,7 +255,7 @@ try {
         <?php endif; ?>
 
         <?php if ($page == 'home') : ?>
-            <!-- SEKSI 1: BERANDA STATISTIK UTAMA -->
+            <!--BERANDA STATISTIK UTAMA -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <h2 class="fw-bold text-dark mb-0">Selamat Datang, Admin!</h2>
                 <span class="text-muted small"><i class="bi bi-calendar-check me-1"></i> Hari ini: <?= date('d M Y'); ?></span>
@@ -364,7 +358,7 @@ try {
             </div>
 
         <?php elseif ($page == 'pesan') : ?>
-            <!-- SEKSI 2: KOTAK PESAN MASUK UTUH -->
+            <!--KOTAK PESAN MASUK -->
             <div class="d-flex justify-content-between align-items-center mb-4">
                 <div>
                     <h2 class="fw-bold text-dark mb-1">Kotak Pesan Masuk</h2>
@@ -430,7 +424,7 @@ try {
                                     </td>
                                 </tr>
 
-                                <!-- Modal Konfirmasi Hapus Pesan -->
+                                <!-- Modal Hapus Pesan -->
                                 <div class="modal fade" id="modalHapus<?= $pesan['id']; ?>" tabindex="-1" aria-hidden="true">
                                   <div class="modal-dialog modal-dialog-centered">
                                     <div class="modal-content border-0 rounded-4 shadow">
@@ -536,7 +530,7 @@ try {
             });
         }
 
-        // Fungsi interaktif membuka detail pesan dan menandainya sebagai sudah dibaca secara asinkron (AJAX)
+        // Fungsi interaktif membuka detail pesan dan menandainya sebagai sudah dibaca secara asinkron 
         function bukaDetailPesan(id, nama, email, subjek, pesan, tanggal, is_read) {
             document.getElementById('det-nama').innerText = nama;
             document.getElementById('det-email').innerText = email;
@@ -549,7 +543,7 @@ try {
             const modal = new bootstrap.Modal(document.getElementById('modalDetailPesan'));
             modal.show();
 
-            // Jika statusnya belum dibaca (is_read == 0), tandai sebagai dibaca di database via AJAX
+            // Jika statusnya belum dibaca (is_read == 0)
             if (is_read === 0) {
                 fetch('dashboard.php?action=mark_read&id=' + id)
                     .then(response => response.json())
@@ -571,7 +565,7 @@ try {
             }
         }
 
-        // Ketika modal ditutup, reload halaman agar badge di sidebar PHP terupdate secara akurat
+        // Ketika modal ditutup, reload halaman agar badge di sidebar PHP terupdate
         const detailModalEl = document.getElementById('modalDetailPesan');
         if (detailModalEl) {
             detailModalEl.addEventListener('hidden.bs.modal', function () {

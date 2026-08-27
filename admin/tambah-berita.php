@@ -20,8 +20,8 @@ if(isset($_POST['simpan']))
         str_replace(' ', '-', $judul)
     );
 
-    // 1. Upload Thumbnail Utama (Sekarang Opsional)
-    $namaFile = ""; // Default kosong jika tidak ada gambar yang diupload
+    //up thumbnail utama
+    $namaFile = ""; // default kosong jika tidak ada gambar yang diupload
     if(!empty($_FILES['thumbnail']['name'])) {
         $thumbnail = $_FILES['thumbnail'];
         $namaFile = time() ."_". str_replace(' ', '_', $thumbnail['name']);
@@ -31,7 +31,7 @@ if(isset($_POST['simpan']))
         );
     }
 
-    // 2. Simpan Berita Utama ke Database
+    // simpan berita ke database
     mysqli_query(
         $conn,
         "INSERT INTO berita
@@ -58,10 +58,10 @@ if(isset($_POST['simpan']))
         )"
     );
 
-    // 3. Ambil ID Berita yang baru saja dimasukkan
+    //ambil ID berita yang baru saja dimasukkan
     $berita_id = mysqli_insert_id($conn);
 
-    // 4. Proses Multi-upload Media Pendukung (Tabel berita_media)
+    //proses multi-upload media pendukung 
     if (!empty($_FILES['berita_media']['name'][0])) {
         $total_files = count($_FILES['berita_media']['name']);
         
@@ -72,7 +72,7 @@ if(isset($_POST['simpan']))
             
             $nama_media_baru = time() . "_" . $i . "_" . str_replace(' ', '_', $nama_media);
             
-            // Deteksi otomatis apakah file berupa video, gambar, atau file data (dokumen)
+            // deteksi otomatis file berupa video, gambar, atau file data (dokumen)
             if (strpos($type_media, 'video') !== false) {
                 $tipe_media = 'video';
             } elseif (strpos($type_media, 'application') !== false || strpos($type_media, 'text') !== false) {
@@ -91,7 +91,7 @@ if(isset($_POST['simpan']))
         }
     }
 
-    // Redirect setelah sukses
+    // redirect setelah sukses
     echo "<script>alert('Berita berhasil disimpan!'); window.location.href='berita.php';</script>";
     exit;
 }

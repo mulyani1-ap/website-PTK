@@ -6,10 +6,9 @@ $alert_gagal = "";
 
 $table_gtk = 'ptk';
 
-// 1. Tangkap keyword pencarian jika ada
+// tangkap keyword pencarian jika ada
 $keyword = isset($_GET['keyword']) ? mysqli_real_escape_string($conn, $_GET['keyword']) : '';
 
-// 2. Logika Hapus Data GTK
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_gtk = intval($_GET['id']);
     try {
@@ -24,14 +23,13 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 3. Ambil total pesan masuk untuk badge notifikasi sidebar (Hanya yang belum dibaca)
 $count_pesan = 0;
 try {
     $q_pesan = mysqli_query($conn, "SELECT COUNT(*) as total FROM pesan_masuk WHERE is_read = 0");
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 4. Ambil data GTK dari database (dengan dukungan filter pencarian)
+//data gtk dari databse (pakefilter pencarian)
 $ambil_gtk = false;
 try {
     if (!empty($keyword)) {
@@ -167,7 +165,6 @@ try {
     </div>
 
     <div class="main-content">
-        <!-- Topbar Mobile Toggle -->
         <div class="d-lg-none d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
             <button class="btn btn-primary" id="sidebarCollapse">
                 <i class="bi bi-list"></i> Menu Panel
@@ -175,7 +172,7 @@ try {
             <span class="fw-bold text-primary">ADMIN PANEL</span>
         </div>
 
-        <!-- Banner Notifikasi -->
+        <!--notif -->
         <?php if (!empty($alert_sukses)) : ?>
             <div class="alert alert-success alert-dismissible fade show rounded-3 small shadow-sm mb-4" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> <?= $alert_sukses; ?>
@@ -200,7 +197,7 @@ try {
             </a>
         </div>
 
-        <!-- KOTAK PENCARIAN (SEARCH BAR) -->
+        <!-- searcj bar -->
         <div class="card border-0 shadow-sm rounded-4 p-3 mb-4 bg-white">
             <form action="" method="GET" class="row g-2 align-items-center">
                 <div class="col">
@@ -241,12 +238,12 @@ try {
                             while ($row = mysqli_fetch_assoc($ambil_gtk)) {
                                 $jabatan = htmlspecialchars($row['jabatan'] ?? 'Pendidik');
                                 
-                                // Memilih warna badge jabatan agar variatif
+                                //pemilihan warna
                                 $badge_class = 'bg-primary';
                                 if (stripos($jabatan, 'guru') !== false) $badge_class = 'bg-info text-dark';
                                 elseif (stripos($jabatan, 'kepala') !== false) $badge_class = 'bg-success';
                                 elseif (stripos($jabatan, 'pengawas') !== false) $badge_class = 'bg-warning text-dark';
-                                elseif (stripos($jabatan, 'kependidikan') !== false || stripos($jabatan, 'administrasi') !== false) $badge_class = 'bg-secondary';
+                                elseif (stripos($jabatan, 'kependidikan') !== false) $badge_class = 'bg-secondary';
                         ?>
                             <tr>
                                 <td><?= $no++; ?></td>
@@ -268,11 +265,11 @@ try {
                                 </td>
                                 <td class="text-center">
                                     <div class="d-flex justify-content-center gap-2">
-                                        <!-- Tombol Edit -->
+                                        <!--tombol edit-->
                                         <a href="form_ptk.php?id=<?= $row['id']; ?>" class="btn btn-sm btn-outline-warning rounded-3" title="Edit Data">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <!-- Tombol Pemicu Modal Hapus -->
+                                        <!--hapus-->
                                         <button type="button" class="btn btn-sm btn-outline-danger rounded-3" data-bs-toggle="modal" data-bs-target="#modalHapusGTK<?= $row['id']; ?>" title="Hapus Permanen">
                                             <i class="bi bi-trash3-fill"></i>
                                         </button>
@@ -280,7 +277,7 @@ try {
                                 </td>
                             </tr>
 
-                            <!-- Bootstrap Modal Konfirmasi Hapus Data GTK -->
+                            <!-- konfirmasi hapus? -->
                             <div class="modal fade" id="modalHapusGTK<?= $row['id']; ?>" tabindex="-1" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content border-0 rounded-4 shadow">
@@ -289,8 +286,7 @@ try {
                                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                   </div>
                                   <div class="modal-body py-3 text-start">
-                                    Apakah Anda yakin ingin menghapus data GTK atas nama <strong><?= htmlspecialchars($row['nama']); ?></strong> secara permanen? Tindakan ini tidak dapat dibatalkan.
-                                  </div>
+                                   Anda yakin ingin menghapus data GTK atas nama <strong><?= htmlspecialchars($row['nama']); ?></strong> secara permanen?
                                   <div class="modal-footer border-0 pt-0">
                                     <button type="button" class="btn btn-light rounded-3" data-bs-dismiss="modal">Batalkan</button>
                                     <a href="ptk.php?action=hapus&id=<?= $row['id']; ?>" class="btn btn-danger rounded-3 px-3">Ya, Hapus Data</a>

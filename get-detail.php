@@ -10,8 +10,8 @@ if (empty($kategori)) {
     exit;
 }
 
-/// Query pencarian fleksibel (kebal spasi/typo)
-if (stripos($kategori, 'Kependidikan') !== false || stripos($kategori, 'Administrasi') !== false) {
+/// query pencarian fleksibel
+if (stripos($kategori, 'Kependidikan') !== false) {
     $query_sql = "SELECT * FROM `ptk` WHERE (`jabatan` LIKE '%Kependidikan%' OR `jabatan` LIKE '%Administrasi%')";
 } else {
     $query_sql = "SELECT * FROM `ptk` WHERE `jabatan` LIKE '%$kategori%'";
@@ -50,7 +50,7 @@ if ($result && mysqli_num_rows($result) > 0) {
 $jabatan_asli = htmlspecialchars($row['jabatan'] ?? '');
 $detail_jabatan = htmlspecialchars($row['detail_jabatan'] ?? '');
 
-// Logika Tampilan Baru: Munculkan Jabatan Utama + Rinciannya (Jika Ada)
+// munculkan jabatan utama + rinciannya (kalau ada)
 if (empty($detail_jabatan)) {
     $tampil_jabatan = "<span class='fw-semibold text-dark'>{$jabatan_asli}</span>";
 } else {

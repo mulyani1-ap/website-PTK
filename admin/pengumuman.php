@@ -1,11 +1,9 @@
 <?php
-// Menghubungkan ke database dengan naik 1 folder ke folder induk
 include "../config/database.php";
 
 $alert_sukses = "";
 $alert_gagal = "";
 
-// 1. Logika Hapus Pengumuman
 if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) {
     $id_pengumuman = intval($_GET['id']);
     try {
@@ -20,10 +18,9 @@ if (isset($_GET['action']) && $_GET['action'] == 'hapus' && isset($_GET['id'])) 
     }
 }
 
-// 2. Ambil total pesan masuk untuk badge notifikasi sidebar (Hanya yang belum dibaca)
+//notif buat side bar (yang belum terbaca doang)
 $count_pesan = 0;
 try {
-    // Auto-migration: Cek & tambah kolom is_read jika belum ada
     $check_col = mysqli_query($conn, "SHOW COLUMNS FROM `pesan_masuk` LIKE 'is_read'");
     if ($check_col && mysqli_num_rows($check_col) == 0) {
         mysqli_query($conn, "ALTER TABLE `pesan_masuk` ADD COLUMN `is_read` TINYINT(1) DEFAULT 0 AFTER `pesan`");
@@ -33,7 +30,6 @@ try {
     if ($q_pesan) $count_pesan = mysqli_fetch_assoc($q_pesan)['total'];
 } catch (Exception $e) {}
 
-// 3. Ambil semua data pengumuman dari database
 $ambil_pengumuman = false;
 try {
     $ambil_pengumuman = mysqli_query($conn, "SELECT * FROM pengumuman ORDER BY id DESC");
@@ -164,7 +160,6 @@ try {
     </div>
 
     <div class="main-content">
-        <!-- Topbar Mobile Toggle -->
         <div class="d-lg-none d-flex justify-content-between align-items-center mb-4 bg-white p-3 rounded-3 shadow-sm">
             <button class="btn btn-primary" id="sidebarCollapse">
                 <i class="bi bi-list"></i> Menu Panel
@@ -172,7 +167,7 @@ try {
             <span class="fw-bold text-primary">ADMIN PANEL</span>
         </div>
 
-        <!-- Banner Notifikasi -->
+        <!-- pop up  -->
         <?php if (!empty($alert_sukses)) : ?>
             <div class="alert alert-success alert-dismissible fade show rounded-3 small shadow-sm mb-4" role="alert">
                 <i class="bi bi-check-circle-fill me-2"></i> <?= $alert_sukses; ?>
@@ -243,7 +238,7 @@ try {
                                 </td>
                             </tr>
 
-                            <!-- Bootstrap Modal Konfirmasi Hapus Pengumuman -->
+                            <!-- pop up hapus  -->
                             <div class="modal fade" id="modalHapusPengumuman<?= $row['id']; ?>" tabindex="-1" aria-hidden="true">
                               <div class="modal-dialog modal-dialog-centered">
                                 <div class="modal-content border-0 rounded-4 shadow">
@@ -276,7 +271,6 @@ try {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Fitur klik toggle sidebar untuk perangkat seluler/mobile
         const sidebarCollapse = document.getElementById('sidebarCollapse');
         if(sidebarCollapse) {
             sidebarCollapse.addEventListener('click', function () {
